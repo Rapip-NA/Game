@@ -7,7 +7,7 @@ on:
 
 jobs:
   web-deploy:
-    name: 🚀 Build & Deploy via SSH
+    name: 🚀 Build & Deploy via Secure HTTPS
     runs-on: ubuntu-latest
 
     steps:
@@ -63,100 +63,37 @@ jobs:
             .
 
           mv ../deploy.tar.gz ./deploy.tar.gz
+          echo "Ukuran paket deploy: $(ls -lh deploy.tar.gz | awk '{print $5}')"
 
-      # ── Deploy via Native OpenSSH (with Auto-Retry & Keepalive) ──────
-      - name: 🚀 Transfer Archive & Run Commands via SSH
+      # ── Deploy via Secure HTTPS Webhook (Bebas Blokir Firewall) ───────
+      - name: 🚀 Push Deploy Package via HTTPS Webhook
         env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USERNAME }}
-          SSH_PASS: ${{ secrets.SSH_PASSWORD }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN || 'rapip_deploy_secret_key_884219' }}
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+          echo "Mengirim paket ke server via HTTPS..."
+          RESPONSE=$(curl -s -k -X POST \
+            -H "X-DEPLOY-KEY: $DEPLOY_TOKEN" \
+            -F "package=@deploy.tar.gz" \
+            https://game.rapipaja.my.id/deploy_hook.php 2>&1 || true)
 
-          SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
+          echo "Response dari server:"
+          echo "$RESPONSE"
 
-          echo "=== 1. UPLOADING ARCHIVE TO SERVER ==="
-          UPLOADED=false
-          for i in 1 2 3; do
-            echo "Percobaan upload ke-$i..."
-            if sshpass -p "$SSH_PASS" scp $SSH_OPTS -P 22 deploy.tar.gz "$SSH_USER@$SSH_HOST:~/domains/game.rapipaja.my.id/public_html/"; then
-              echo "Upload berhasil!"
-              UPLOADED=true
-              break
-            else
-              echo "Percobaan $i gagal, tunggu 5 detik..."
-              sleep 5
-            fi
-          done
-
-          if [ "$UPLOADED" = false ]; then
-            echo "Error: Gagal mengupload file ke server setelah 3 percobaan."
-            exit 1
+          # Jika HTTPS gagal, coba fallback ke HTTP
+          if echo "$RESPONSE" | grep -qv '"status":"success"'; then
+            echo "Mencoba fallback via HTTP..."
+            RESPONSE=$(curl -s -X POST \
+              -H "X-DEPLOY-KEY: $DEPLOY_TOKEN" \
+              -F "package=@deploy.tar.gz" \
+              http://game.rapipaja.my.id/deploy_hook.php 2>&1 || true)
+            echo "Response fallback:"
+            echo "$RESPONSE"
           fi
 
-          echo "=== 2. RUNNING REMOTE TASKS VIA SSH ==="
-          sshpass -p "$SSH_PASS" ssh $SSH_OPTS -p 22 "$SSH_USER@$SSH_HOST" bash << 'EOF'
-            set -e
-            cd ~/domains/game.rapipaja.my.id/public_html
-
-            echo "=== EXTRACTING DEPLOY ARCHIVE ==="
-            # Ekstrak file-file baru (tanpa menimpa .env server)
-            tar -xzf deploy.tar.gz
-            rm -f deploy.tar.gz
-
-            echo "=== DETECTING PHP VERSIONS ON SERVER ==="
-            PHP_BIN=""
-            for p in \
-              /usr/local/php84/bin/php \
-              /usr/local/php83/bin/php \
-              /usr/local/php82/bin/php \
-              /usr/local/bin/php84 \
-              /usr/local/bin/php83 \
-              /usr/local/bin/ea-php84 \
-              /usr/local/bin/ea-php83 \
-              /opt/alt/php84/usr/bin/php \
-              /opt/alt/php83/usr/bin/php \
-              /opt/cpanel/ea-php84/root/usr/bin/php \
-              /opt/cpanel/ea-php83/root/usr/bin/php \
-              $(which php84 2>/dev/null) \
-              $(which php8.4 2>/dev/null) \
-              $(which php83 2>/dev/null) \
-              $(which php8.3 2>/dev/null) \
-              $(which php 2>/dev/null); do
-              if [ -n "$p" ] && [ -x "$p" ]; then
-                ver=$("$p" -r 'echo PHP_VERSION;' 2>/dev/null || true)
-                echo "Found: $p -> $ver"
-                if [ -z "$PHP_BIN" ]; then
-                  case "$ver" in
-                    8.4*|8.3*|8.2*) PHP_BIN="$p" ;;
-                  esac
-                fi
-              fi
-            done
-
-            if [ -z "$PHP_BIN" ]; then
-              PHP_BIN=$(which php)
-              echo "Warning: No PHP 8.2+ found, using default: $PHP_BIN"
-            fi
-
-            echo "=== USING PHP: $PHP_BIN ($($PHP_BIN -r 'echo PHP_VERSION;')) ==="
-
-            # Pastikan .env aman
-            if [ ! -f .env ]; then
-              echo "Notice: .env belum ada di server, membuat .env baru..."
-              cp .env.example .env
-              $PHP_BIN artisan key:generate --force
-            else
-              echo "OK: .env di server tetap aman dan tidak tersentuh."
-            fi
-
-            # Pastikan folder writable
-            mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
-            chmod -R 775 storage bootstrap/cache 2>/dev/null || true
-
-            $PHP_BIN artisan config:clear || true
-            $PHP_BIN artisan route:clear || true
-            $PHP_BIN artisan view:clear || true
-            $PHP_BIN artisan migrate --force || true
-            echo "=== DEPLOYMENT COMPLETED SUCCESSFULLY ==="
-          EOF
+          # Validasi status success
+          if echo "$RESPONSE" | grep -q '"status":"success"'; then
+            echo "✅ DEPLOYMENT BERHASIL 100%!"
+          else
+            echo "❌ Gagal deploy via webhook. Cek apakah deploy_hook.php sudah ada di server."
+            exit 1
+          fi
