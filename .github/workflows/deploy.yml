@@ -27,7 +27,7 @@ jobs:
         run: cp .env.example .env
 
       - name: 📦 Install Composer dependencies (production)
-        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-req=php+
         env:
           COMPOSER_MEMORY_LIMIT: -1
 
@@ -85,8 +85,45 @@ jobs:
           port: 22
           script: |
             cd ~/domains/game.rapipaja.my.id/public_html
-            PHP_BIN=$(which ea-php84 2>/dev/null || which php8.4 2>/dev/null || which php)
-            $PHP_BIN artisan config:clear
-            $PHP_BIN artisan route:clear
-            $PHP_BIN artisan view:clear
-            $PHP_BIN artisan migrate --force
+
+            echo "=== DETECTING PHP VERSIONS ON SERVER ==="
+            PHP_BIN=""
+            for p in \
+              /usr/local/php84/bin/php \
+              /usr/local/php83/bin/php \
+              /usr/local/php82/bin/php \
+              /usr/local/bin/php84 \
+              /usr/local/bin/php83 \
+              /usr/local/bin/ea-php84 \
+              /usr/local/bin/ea-php83 \
+              /opt/alt/php84/usr/bin/php \
+              /opt/alt/php83/usr/bin/php \
+              /opt/cpanel/ea-php84/root/usr/bin/php \
+              /opt/cpanel/ea-php83/root/usr/bin/php \
+              $(which php84 2>/dev/null) \
+              $(which php8.4 2>/dev/null) \
+              $(which php83 2>/dev/null) \
+              $(which php8.3 2>/dev/null) \
+              $(which php 2>/dev/null); do
+              if [ -n "$p" ] && [ -x "$p" ]; then
+                ver=$("$p" -r 'echo PHP_VERSION;' 2>/dev/null || true)
+                echo "Found: $p -> $ver"
+                if [ -z "$PHP_BIN" ]; then
+                  case "$ver" in
+                    8.4*|8.3*|8.2*) PHP_BIN="$p" ;;
+                  esac
+                fi
+              fi
+            done
+
+            if [ -z "$PHP_BIN" ]; then
+              PHP_BIN=$(which php)
+              echo "Warning: No PHP 8.2+ found, using default: $PHP_BIN"
+            fi
+
+            echo "=== USING PHP: $PHP_BIN ($($PHP_BIN -r 'echo PHP_VERSION;')) ==="
+
+            $PHP_BIN artisan config:clear || true
+            $PHP_BIN artisan route:clear || true
+            $PHP_BIN artisan view:clear || true
+            $PHP_BIN artisan migrate --force || true
