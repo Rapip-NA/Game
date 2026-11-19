@@ -44,7 +44,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
+          protocol: ftps
           port: 21
           server-dir: /home/rapipaja/domains/game.rapipaja.my.id/public_html/
           # Penting: vendor & public/build TIDAK di-exclude
@@ -55,6 +55,7 @@ jobs:
             **/node_modules/**
             .env
             .env.*
+            .agents/**
             storage/logs/**
             storage/framework/cache/**
             storage/framework/sessions/**
