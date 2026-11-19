@@ -761,21 +761,21 @@
             grid.innerHTML = filtered.map(game => `
                 <article class="group cursor-pointer" onclick="window.location.href='${game.url}'">
                     <!-- Poster Card -->
-                    <div class="sticker-card ${game.cardBg} ${game.textColor} rounded-3xl p-5 h-56 flex flex-col justify-between relative overflow-hidden">
+                    <div class="sticker-card ${game.cardBg} ${game.textColor} rounded-3xl p-5 h-60 flex flex-col justify-between relative overflow-hidden">
                         <div class="flex items-center justify-between z-10">
                             <span class="px-2.5 py-1 rounded-full bg-white text-ink border-2 border-ink text-[10px] font-extrabold uppercase">
                                 ${game.tagText}
                             </span>
-                            <span class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-bold group-hover:scale-110 transition-transform">
+                            <span class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-bold group-hover:scale-110 transition-transform shrink-0">
                                 ▶
                             </span>
                         </div>
 
-                        <div class="h-28 my-1 group-hover:scale-105 transition-transform flex items-center justify-center">
+                        <div class="h-24 my-auto group-hover:scale-105 transition-transform flex items-center justify-center">
                             ${game.art}
                         </div>
 
-                        <h3 class="font-comic text-2xl tracking-wide leading-none z-10">
+                        <h3 class="font-comic text-xl sm:text-2xl tracking-wide leading-tight z-10 pb-1">
                             ${game.title}
                         </h3>
                     </div>
