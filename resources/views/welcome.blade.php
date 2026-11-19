@@ -138,7 +138,6 @@
                     <a href="#tentang" class="hover:text-cobalt transition-colors">TENTANG</a>
                     <a href="#kategori" class="hover:text-cobalt transition-colors">KATEGORI</a>
                     <a href="#koleksi" class="hover:text-cobalt transition-colors">KOLEKSI GAME</a>
-                    <a href="#cara-main" class="hover:text-cobalt transition-colors">CARA MAIN</a>
                     <a href="#ulasan" class="hover:text-cobalt transition-colors">ULASAN</a>
                 </nav>
 
@@ -162,7 +161,6 @@
             <a href="#tentang" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">TENTANG</a>
             <a href="#kategori" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">KATEGORI</a>
             <a href="#koleksi" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">KOLEKSI GAME</a>
-            <a href="#cara-main" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">CARA MAIN</a>
             <a href="#ulasan" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">ULASAN</a>
         </div>
     </header>
@@ -587,68 +585,6 @@
                     </div>
 
                 </div>
-            </div>
-        </section>
-
-        <!-- 7. CARA BERMAIN (5 LANGKAH HORIZONTAL BERURUTAN) -->
-        <section id="cara-main" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="font-comic text-4xl sm:text-5xl text-ink mb-10 text-center lg:text-left">CARA MAIN</h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 items-start">
-                
-                <!-- Badge Miring "SIMPEL, CEPAT & SERU!" -->
-                <div class="flex justify-center lg:justify-start">
-                    <div class="bg-sky-200 border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] -rotate-3 w-44 text-center">
-                        <p class="font-doodle font-bold text-lg leading-tight text-ink">
-                            SIMPEL, CEPAT & SERU! 😄
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Langkah 1 -->
-                <div class="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div class="w-9 h-9 rounded-full bg-cobalt text-white border-2 border-ink font-comic text-lg flex items-center justify-center mb-3 shadow-[2px_2px_0px_#111111]">1</div>
-                    <div class="text-3xl mb-2">🎯</div>
-                    <h3 class="font-extrabold text-sm uppercase text-ink">1. PILIH GAME</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-1">Cari genre favoritmu di katalog warna-warni.</p>
-                    <span class="hidden lg:block absolute top-11 -right-3 font-black text-xl text-ink">→</span>
-                </div>
-
-                <!-- Langkah 2 -->
-                <div class="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div class="w-9 h-9 rounded-full bg-vermilion text-white border-2 border-ink font-comic text-lg flex items-center justify-center mb-3 shadow-[2px_2px_0px_#111111]">2</div>
-                    <div class="text-3xl mb-2">🖱️</div>
-                    <h3 class="font-extrabold text-sm uppercase text-ink">2. KLIK MAIN</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-1">Game langsung terbuka instan tanpa unduh file.</p>
-                    <span class="hidden lg:block absolute top-11 -right-3 font-black text-xl text-ink">→</span>
-                </div>
-
-                <!-- Langkah 3 -->
-                <div class="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div class="w-9 h-9 rounded-full bg-sunny text-ink border-2 border-ink font-comic text-lg flex items-center justify-center mb-3 shadow-[2px_2px_0px_#111111]">3</div>
-                    <div class="text-3xl mb-2">⚡</div>
-                    <h3 class="font-extrabold text-sm uppercase text-ink">3. KEJAR SKOR</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-1">Kumpulkan poin sebanyak mungkin sebelum waktu habis.</p>
-                    <span class="hidden lg:block absolute top-11 -right-3 font-black text-xl text-ink">→</span>
-                </div>
-
-                <!-- Langkah 4 -->
-                <div class="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div class="w-9 h-9 rounded-full bg-cobalt text-white border-2 border-ink font-comic text-lg flex items-center justify-center mb-3 shadow-[2px_2px_0px_#111111]">4</div>
-                    <div class="text-3xl mb-2">🏆</div>
-                    <h3 class="font-extrabold text-sm uppercase text-ink">4. TANTANG TEMAN</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-1">Bagikan rekormu dan adu ketangkasan bareng teman.</p>
-                    <span class="hidden lg:block absolute top-11 -right-3 font-black text-xl text-ink">→</span>
-                </div>
-
-                <!-- Langkah 5 -->
-                <div class="relative flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div class="w-9 h-9 rounded-full bg-vermilion text-white border-2 border-ink font-comic text-lg flex items-center justify-center mb-3 shadow-[2px_2px_0px_#111111]">5</div>
-                    <div class="text-3xl mb-2">🔁</div>
-                    <h3 class="font-extrabold text-sm uppercase text-ink">5. ULANGI TERUS</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-1">Coba judul game lain setiap kali butuh penyegaran!</p>
-                </div>
-
             </div>
         </section>
 
