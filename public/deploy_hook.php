@@ -1,13 +1,11 @@
 <?php
 
 /**
- * MainYuk! - Secure Deploy Webhook
- * Automated GitHub Actions deployment handler.
+ * MainYuk! - Automated Secure Deploy Webhook & Manager
  */
 
-// Konfigurasi Token Keamanan
+// Secret Token
 $secretKey = 'rapip_deploy_secret_key_884219';
-
 $receivedKey = $_SERVER['HTTP_X_DEPLOY_KEY'] ?? $_REQUEST['token'] ?? '';
 
 if (empty($receivedKey) || !hash_equals($secretKey, $receivedKey)) {
@@ -17,60 +15,13 @@ if (empty($receivedKey) || !hash_equals($secretKey, $receivedKey)) {
     exit;
 }
 
-// 1. Health check endpoint (GET ?ping=1)
-if (isset($_GET['ping'])) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'status' => 'ok',
-        'message' => 'Deploy webhook is ready.',
-        'php_version' => PHP_VERSION,
-        'server_time' => date('Y-m-d H:i:s'),
-    ]);
-    exit;
-}
-
-// 2. Upload handling (POST)
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_FILES['package'])) {
-    http_response_code(400);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'No deploy package attached.']);
-    exit;
-}
-
-if ($_FILES['package']['error'] !== UPLOAD_ERR_OK) {
-    http_response_code(400);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Upload failed with code: ' . $_FILES['package']['error']]);
-    exit;
-}
-
-// Root directory proyek (tempat file artisan berada)
+// Root directory tempat artisan berada
 $rootDir = __DIR__;
 if (!file_exists($rootDir . '/artisan') && file_exists(dirname($rootDir) . '/artisan')) {
     $rootDir = dirname($rootDir);
 }
 
-$tmpUploaded = $_FILES['package']['tmp_name'];
-$destTar = $rootDir . '/deploy.tar.gz';
-
-if (!@move_uploaded_file($tmpUploaded, $destTar)) {
-    @copy($tmpUploaded, $destTar);
-}
-
-if (!file_exists($destTar)) {
-    http_response_code(500);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Failed to write package to destination.']);
-    exit;
-}
-
-// Ekstrak arsip (tidak akan menimpa .env karena .env dikecualikan saat pembuatan tar)
-$extractLogs = [];
-$returnCode = 0;
-exec("cd " . escapeshellarg($rootDir) . " && tar -xzf deploy.tar.gz 2>&1", $extractLogs, $returnCode);
-@unlink($destTar);
-
-// Deteksi binary PHP terbaik di server (8.4 / 8.3 / 8.2)
+// Deteksi binary PHP 8.4/8.3 di server
 $phpBin = 'php';
 foreach ([
     '/usr/local/php84/bin/php',
@@ -97,15 +48,75 @@ foreach ([
     }
 }
 
-// Pastikan file .env ada jika belum pernah dibuat sama sekali
-$envCreated = false;
-if (!file_exists($rootDir . '/.env') && file_exists($rootDir . '/.env.example')) {
-    @copy($rootDir . '/.env.example', $rootDir . '/.env');
-    @exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan key:generate --force 2>&1");
-    $envCreated = true;
+$action = $_REQUEST['action'] ?? (isset($_GET['ping']) ? 'ping' : 'deploy');
+
+// 1. Health check (ping)
+if ($action === 'ping') {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'ok',
+        'message' => 'Deploy webhook is ready.',
+        'php_web_version' => PHP_VERSION,
+        'php_cli_binary' => $phpBin,
+        'has_env' => file_exists($rootDir . '/.env'),
+        'server_time' => date('Y-m-d H:i:s'),
+    ]);
+    exit;
 }
 
-// Pastikan struktur folder storage ada & writable
+// 2. Fix Key Only (jika cuma butuh generate APP_KEY)
+if ($action === 'key_generate') {
+    if (!file_exists($rootDir . '/.env') && file_exists($rootDir . '/.env.example')) {
+        copy($rootDir . '/.env.example', $rootDir . '/.env');
+    }
+    $out = [];
+    exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan key:generate --force 2>&1", $out);
+    exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan config:clear 2>&1", $out);
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'success', 'artisan' => $out]);
+    exit;
+}
+
+// 3. Deploy via Git Pull (Paling cepat, aman dari ModSecurity & bebas upload)
+$logs = [];
+if (is_dir($rootDir . '/.git')) {
+    exec("cd " . escapeshellarg($rootDir) . " && git fetch origin main 2>&1", $logs);
+    exec("cd " . escapeshellarg($rootDir) . " && git reset --hard origin/main 2>&1", $logs);
+} else {
+    // Jika upload package via POST
+    if (isset($_FILES['package']) && $_FILES['package']['error'] === UPLOAD_ERR_OK) {
+        $destTar = $rootDir . '/deploy.tar.gz';
+        @move_uploaded_file($_FILES['package']['tmp_name'], $destTar);
+        exec("cd " . escapeshellarg($rootDir) . " && tar -xzf deploy.tar.gz 2>&1", $logs);
+        @unlink($destTar);
+    } else {
+        // Download zip dari GitHub archive
+        $zipUrl = 'https://codeload.github.com/Rapip-NA/Game/zip/refs/heads/main';
+        $tmpZip = $rootDir . '/temp_update.zip';
+        $content = @file_get_contents($zipUrl);
+        if ($content) {
+            file_put_contents($tmpZip, $content);
+            exec("unzip -o -q " . escapeshellarg($tmpZip) . " -d " . escapeshellarg($rootDir) . " 2>&1", $logs);
+            exec("cp -rf " . escapeshellarg($rootDir . '/Game-main/') . "* " . escapeshellarg($rootDir) . "/ 2>&1", $logs);
+            exec("rm -rf " . escapeshellarg($tmpZip) . " " . escapeshellarg($rootDir . '/Game-main'), $logs);
+        }
+    }
+}
+
+// Pastikan .env ada dan memiliki APP_KEY
+if (!file_exists($rootDir . '/.env')) {
+    if (file_exists($rootDir . '/.env.example')) {
+        copy($rootDir . '/.env.example', $rootDir . '/.env');
+    }
+}
+
+// Cek apakah APP_KEY masih kosong di .env
+$envContent = @file_get_contents($rootDir . '/.env') ?: '';
+if (!str_contains($envContent, 'APP_KEY=base64:')) {
+    exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan key:generate --force 2>&1", $logs);
+}
+
+// Pastikan storage folder permissions
 @mkdir($rootDir . '/storage/framework/sessions', 0775, true);
 @mkdir($rootDir . '/storage/framework/views', 0775, true);
 @mkdir($rootDir . '/storage/framework/cache/data', 0775, true);
@@ -114,19 +125,16 @@ if (!file_exists($rootDir . '/.env') && file_exists($rootDir . '/.env.example'))
 @chmod($rootDir . '/storage', 0775);
 @chmod($rootDir . '/bootstrap/cache', 0775);
 
-// Jalankan artisan commands
-$artisanOutput = [];
-exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan config:clear 2>&1", $artisanOutput);
-exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan route:clear 2>&1", $artisanOutput);
-exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan view:clear 2>&1", $artisanOutput);
-exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan migrate --force 2>&1", $artisanOutput);
+// Jalankan artisan
+exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan config:clear 2>&1", $logs);
+exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan route:clear 2>&1", $logs);
+exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan view:clear 2>&1", $logs);
+exec("cd " . escapeshellarg($rootDir) . " && $phpBin artisan migrate --force 2>&1", $logs);
 
 header('Content-Type: application/json');
 echo json_encode([
     'status' => 'success',
-    'message' => 'Aplikasi berhasil di-deploy!',
-    'php_binary' => $phpBin,
-    'php_version' => PHP_VERSION,
-    'env_status' => $envCreated ? 'created_new' : 'preserved_existing',
-    'artisan_logs' => $artisanOutput,
+    'message' => 'Deployment & artisan tasks completed!',
+    'php_bin' => $phpBin,
+    'logs' => $logs,
 ]);
