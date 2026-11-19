@@ -49,8 +49,8 @@ jobs:
           # Hapus .env lokal runner agar mustahil ter-upload ke server
           rm -f .env
 
-          # Buat archive tarball dengan mengecualikan file rahasia/besar
-          tar -czf deploy.tar.gz \
+          # Simpan di folder parent (../) agar tar tidak membaca arsip yang sedang dibuat
+          tar --warning=no-file-changed -czf ../deploy.tar.gz \
             --exclude='.git' \
             --exclude='node_modules' \
             --exclude='.env' \
@@ -60,8 +60,9 @@ jobs:
             --exclude='.phpunit.cache' \
             --exclude='phpunit.xml' \
             --exclude='README.md' \
-            --exclude='deploy.tar.gz' \
             .
+
+          mv ../deploy.tar.gz ./deploy.tar.gz
 
       # ── Upload single archive via SCP ───────────────────────────────
       - name: 📂 Upload archive via SCP
