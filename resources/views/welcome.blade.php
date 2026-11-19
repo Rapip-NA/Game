@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAIN YUK! — Portal Game Web Seru Anti Gabut</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('img/icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/icon.png') }}">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -330,29 +334,7 @@
                                 DIBUAT KARENA GABUT NAMPUNG IDE DIMANA 🙂
                             </h3>
 
-                            <ul class="space-y-3 font-doodle text-lg sm:text-xl text-ink font-bold">
-                                <li class="flex items-center gap-3">
-                                    <span class="w-7 h-7 rounded-lg bg-sunny border-2 border-ink flex items-center justify-center text-sm shrink-0">⚡</span>
-                                    <span>Tanpa Download (Anti Lemot)</span>
-                                </li>
-                                <li class="flex items-center gap-3">
-                                    <span class="w-7 h-7 rounded-lg bg-pastelPink border-2 border-ink flex items-center justify-center text-sm shrink-0">🎁</span>
-                                    <span>Gratis 100% Selamanya</span>
-                                </li>
-                                <li class="flex items-center gap-3">
-                                    <span class="w-7 h-7 rounded-lg bg-cobalt text-white border-2 border-ink flex items-center justify-center text-sm shrink-0">📱</span>
-                                    <span>Ringan di HP & PC</span>
-                                </li>
-                                <li class="flex items-center gap-3">
-                                    <span class="w-7 h-7 rounded-lg bg-vermilion text-white border-2 border-ink flex items-center justify-center text-sm shrink-0">🔥</span>
-                                    <span>Update Game Tiap Minggu</span>
-                                </li>
-                            </ul>
-
-                            <!-- Doodle Hati Merah di Sudut Kanan Bawah -->
-                            <svg class="w-9 h-9 absolute bottom-3 right-4 rotate-12" viewBox="0 0 36 36" fill="none">
-                                <path d="M18 31C18 31 5 22 5 12.5C5 8.5 8 5.5 11.8 5.5C14.3 5.5 16.6 6.9 18 9C19.4 6.9 21.7 5.5 24.2 5.5C28 5.5 31 8.5 31 12.5C31 22 18 31 18 31Z" fill="#EB3B24" stroke="#111111" stroke-width="2.5"/>
-                            </svg>
+                            
                         </div>
                     </div>
 

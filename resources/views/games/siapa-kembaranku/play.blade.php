@@ -6,6 +6,10 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Main: SIAPA KEMBARANKU? — MainYuk!</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ asset('img/icon.png') }}">
+  <link rel="apple-touch-icon" href="{{ asset('img/icon.png') }}">
+
   <!-- Google Fonts: Luckiest Guy, Patrick Hand & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
