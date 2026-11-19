@@ -186,7 +186,7 @@
                         </h1>
 
                         <p class="mt-5 text-base sm:text-lg font-semibold text-slate-700 max-w-md mx-auto lg:mx-0 leading-relaxed">
-                            Kumpulan mini-game web ringan penuh warna yang siap bikin hari-harimu makin asyik—langsung main di browser tanpa ribet!
+                            Tempat untuk mengumpulkan, menyimpan, dan menjelajahi berbagai ide game yang ingin dimainkan. Temukan inspirasi baru, dan wujudkan keseruan bermain dalam satu tempat!
                         </p>
 
                         <!-- Tombol Merah PILIH GAME -> & Link TENTANG KAMI -->
@@ -296,7 +296,7 @@
                         <!-- Label Stiker Kuning "KOPI + GAME = MANTAP" -->
                         <div class="bg-sunny border-[2.5px] border-ink px-4 py-2 rounded-xl shadow-[4px_4px_0px_#111111] rotate-2 -mt-4 z-10">
                             <p class="font-doodle font-bold text-base sm:text-lg text-ink leading-tight flex items-center gap-1.5">
-                                KOPI + GAME = MANTAP ☕🎮
+                                P Ice Breaking!
                             </p>
                         </div>
                     </div>
@@ -304,13 +304,13 @@
                     <!-- Tengah: HALO, GAMERS! & Deskripsi Portal -->
                     <div class="lg:col-span-5 text-white space-y-4 text-center lg:text-left">
                         <h2 class="font-comic text-3xl sm:text-4xl lg:text-5xl tracking-wide text-white">
-                            HALO, <span class="text-sunny">GAMERS!</span>
+                            HALO, <span class="text-sunny">SOBAT!</span>
                         </h2>
                         <p class="text-blue-50 text-sm sm:text-base leading-relaxed font-medium">
-                            <strong>MainYuk</strong> adalah markas digital buat kamu yang butuh hiburan kilat di sela-sela kesibukan. Semua game di sini dirancang ringan, penuh warna, dan bisa langsung dimainkan tanpa perlu install aplikasi apa pun.
+                            <strong>MainYuk</strong> Tempat kumpulan game dan ice breaking seru untuk menemani sela-sela kesibukan belajar. Dirancang untuk mencairkan suasana, membangun keakraban, dan menghadirkan keseruan di tengah kegiatan belajar maupun aktivitas bersama.
                         </p>
                         <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
-                            Kami percaya game terbaik adalah yang bikin kamu senyum, tertantang, dan gampang diajak mabar bareng teman!
+                            Kami percaya game terbaik adalah yang bikin kamu senyum, tertantang, dan gampang diajak maen bareng teman!
                         </p>
                         <div class="pt-2 flex items-center justify-center lg:justify-start gap-4">
                             <a href="#koleksi" class="sticker-btn bg-white text-ink font-extrabold text-xs sm:text-sm px-6 py-3 rounded-full tracking-wide">
@@ -323,11 +323,11 @@
                         </div>
                     </div>
 
-                    <!-- Kanan: Kartu Notepad Kertas Bergaris Miring "KENAPA MAIN DI SINI?" -->
+                    <!-- Kanan: Kartu Notepad Kertas Bergaris Miring -->
                     <div class="lg:col-span-4">
                         <div class="lined-paper border-[3px] border-ink rounded-2xl p-6 shadow-[6px_6px_0px_#111111] rotate-1 hover:rotate-0 transition-transform relative">
                             <h3 class="font-comic text-xl sm:text-2xl text-ink mb-4 tracking-wide">
-                                KENAPA MAIN DI SINI?
+                                DIBUAT KARENA GABUT NAMPUNG IDE DIMANA 🙂
                             </h3>
 
                             <ul class="space-y-3 font-doodle text-lg sm:text-xl text-ink font-bold">
