@@ -246,56 +246,13 @@
                             </p>
                         </div>
 
-                        <!-- Ilustrasi Utama Stiker Karakter Gamer Kacamata + Beanie + Sweater Kuning -->
-                        <div class="relative z-10 w-72 sm:w-80 md:w-96">
-                            <svg viewBox="0 0 360 350" class="w-full h-auto drop-shadow-[0_6px_0_#111111]" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Outline Sticker Biru Cobalt Tebal di Belakang Karakter -->
-                                <path d="M85 350C85 260 110 230 135 218C115 195 108 155 118 115C122 65 155 38 190 38C228 38 258 68 260 118C268 158 258 196 238 218C265 232 292 265 292 350H85Z" fill="#0B44D6" stroke="#111111" stroke-width="5"/>
-                                
-                                <!-- Sweater Kuning Cerah -->
-                                <path d="M98 350C102 272 128 242 188 242C248 242 274 272 278 350H98Z" fill="#FFD21E" stroke="#111111" stroke-width="4"/>
-                                <!-- Garis Rajut Sweater -->
-                                <path d="M148 246C162 268 214 268 228 246" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
-                                <path d="M126 290L132 350M250 290L244 350" stroke="#111111" stroke-width="3.5" stroke-linecap="round"/>
-
-                                <!-- Leher -->
-                                <rect x="168" y="205" width="40" height="44" rx="14" fill="#F6C39E" stroke="#111111" stroke-width="4"/>
-
-                                <!-- Rambut Kriwil Coklat -->
-                                <circle cx="132" cy="128" r="22" fill="#3B2314" stroke="#111111" stroke-width="3.5"/>
-                                <circle cx="244" cy="128" r="22" fill="#3B2314" stroke="#111111" stroke-width="3.5"/>
-                                <circle cx="128" cy="156" r="18" fill="#3B2314" stroke="#111111" stroke-width="3.5"/>
-                                <circle cx="248" cy="156" r="18" fill="#3B2314" stroke="#111111" stroke-width="3.5"/>
-
-                                <!-- Wajah -->
-                                <path d="M138 122C138 88 238 88 238 122V165C238 198 214 218 188 218C162 218 138 198 138 165V122Z" fill="#FBD0B0" stroke="#111111" stroke-width="4"/>
-
-                                <!-- Topi Kupluk (Beanie) Biru Cobalt -->
-                                <path d="M134 112C134 65 162 46 188 46C214 46 242 65 242 112H134Z" fill="#0B44D6" stroke="#111111" stroke-width="4"/>
-                                <rect x="128" y="96" width="120" height="24" rx="12" fill="#1D5BFF" stroke="#111111" stroke-width="4"/>
-                                <path d="M155 96V120M188 96V120M221 96V120" stroke="#111111" stroke-width="3"/>
-
-                                <!-- Kacamata Bulat -->
-                                <circle cx="164" cy="148" r="20" fill="#FFFFFF" fill-opacity="0.7" stroke="#111111" stroke-width="4.5"/>
-                                <circle cx="212" cy="148" r="20" fill="#FFFFFF" fill-opacity="0.7" stroke="#111111" stroke-width="4.5"/>
-                                <path d="M184 148H192" stroke="#111111" stroke-width="4.5"/>
-                                <!-- Bola Mata Melirik ke Atas Kiri -->
-                                <circle cx="159" cy="144" r="5" fill="#111111"/>
-                                <circle cx="207" cy="144" r="5" fill="#111111"/>
-                                <!-- Alis Ekspresif -->
-                                <path d="M148 124Q164 118 176 125" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
-                                <path d="M200 125Q212 118 228 124" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
-
-                                <!-- Hidung & Senyum Asyik -->
-                                <path d="M188 152V168L181 171" stroke="#111111" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M168 184C178 196 198 196 208 184" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
-
-                                <!-- Stik Gamepad di Tangan -->
-                                <rect x="132" y="276" width="112" height="54" rx="24" fill="#EB3B24" stroke="#111111" stroke-width="4"/>
-                                <path d="M156 295V311M148 303H164" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
-                                <circle cx="216" cy="297" r="5" fill="#FFD21E" stroke="#111111" stroke-width="2"/>
-                                <circle cx="228" cy="307" r="5" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
-                            </svg>
+                        <!-- Ilustrasi Utama Karakter Gamer -->
+                        <div class="relative z-10 w-72 sm:w-80 md:w-96 flex justify-center items-end">
+                            <img 
+                                src="{{ asset('img/ava.png') }}" 
+                                alt="MainYuk Gamer Avatar" 
+                                class="w-full h-auto object-contain drop-shadow-[0_8px_0_#111111] pointer-events-none select-none hover:scale-105 transition-transform duration-300"
+                            >
                         </div>
                     </div>
                 </div>
