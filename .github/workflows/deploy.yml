@@ -23,7 +23,7 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: 📄 Copy Environment File
+      - name: 📄 Temporary Local Env for Build
         run: cp .env.example .env
 
       - name: 📦 Install Composer dependencies (production)
@@ -43,40 +43,40 @@ jobs:
       - name: 🏗 Build Vite assets
         run: npm run build
 
-      # ── Upload via SCP (SSH file transfer) ───────────────────────────
-      - name: 📂 Upload files via SCP
+      # ── Create Archive (STRICTLY EXCLUDING .env) ──────────────────────
+      - name: 📦 Package files into archive
+        run: |
+          # Hapus .env lokal runner agar mustahil ter-upload ke server
+          rm -f .env
+
+          # Buat archive tarball dengan mengecualikan file rahasia/besar
+          tar -czf deploy.tar.gz \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='.agents' \
+            --exclude='tests' \
+            --exclude='.phpunit.cache' \
+            --exclude='phpunit.xml' \
+            --exclude='README.md' \
+            --exclude='deploy.tar.gz' \
+            .
+
+      # ── Upload single archive via SCP ───────────────────────────────
+      - name: 📂 Upload archive via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
-          source: "."
+          source: "deploy.tar.gz"
           target: "~/domains/game.rapipaja.my.id/public_html"
           rm: false
-          strip_components: 1
-          exclude: >-
-            .git,
-            .git/**,
-            node_modules,
-            node_modules/**,
-            .env,
-            .env.*,
-            .agents,
-            .agents/**,
-            storage/logs/**,
-            storage/framework/cache/**,
-            storage/framework/sessions/**,
-            storage/framework/views/**,
-            storage/pail/**,
-            tests,
-            tests/**,
-            .phpunit.cache,
-            phpunit.xml,
-            README.md
 
-      # ── Post-deploy: jalankan artisan commands di server ─────────────
-      - name: ⚡ Run post-deploy commands via SSH
+      # ── Extract & run post-deploy commands via SSH ───────────────────
+      - name: ⚡ Extract & Run post-deploy commands via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -85,6 +85,11 @@ jobs:
           port: 22
           script: |
             cd ~/domains/game.rapipaja.my.id/public_html
+
+            echo "=== EXTRACTING DEPLOY ARCHIVE ==="
+            # Extract file-file baru (tidak akan menimpa .env yang ada di server)
+            tar -xzf deploy.tar.gz
+            rm -f deploy.tar.gz
 
             echo "=== DETECTING PHP VERSIONS ON SERVER ==="
             PHP_BIN=""
@@ -122,6 +127,19 @@ jobs:
             fi
 
             echo "=== USING PHP: $PHP_BIN ($($PHP_BIN -r 'echo PHP_VERSION;')) ==="
+
+            # Pastikan .env ada (jika baru pertama kali, buat dan generate key)
+            if [ ! -f .env ]; then
+              echo "Notice: .env belum ada di server, membuat .env baru..."
+              cp .env.example .env
+              $PHP_BIN artisan key:generate --force
+            else
+              echo "OK: .env di server tetap aman dan tidak tersentuh."
+            fi
+
+            # Pastikan permissions folder storage dan bootstrap/cache aman
+            mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
+            chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
             $PHP_BIN artisan config:clear || true
             $PHP_BIN artisan route:clear || true
