@@ -1,0 +1,67 @@
+name: Deploy Laravel Project on push to cPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: 🚀 Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout code
+        uses: actions/checkout@v4
+
+      # ── PHP ──────────────────────────────────────────────────────────
+      - name: 🐘 Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, sqlite3, pdo_sqlite
+          coverage: none
+
+      - name: 📦 Install Composer dependencies (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      # ── Node / Vite ──────────────────────────────────────────────────
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 📦 Install npm dependencies
+        run: npm ci --ignore-scripts
+
+      - name: 🏗 Build Vite assets
+        run: npm run build
+
+      # ── Deploy via FTP ───────────────────────────────────────────────
+      - name: 📂 Deploy via FTP to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          server-dir: ./
+          # Penting: vendor & public/build TIDAK di-exclude
+          # karena server cPanel tidak bisa jalankan composer/npm sendiri
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .env
+            .env.*
+            storage/logs/**
+            storage/framework/cache/**
+            storage/framework/sessions/**
+            storage/framework/views/**
+            storage/pail/**
+            tests/**
+            phpunit.xml
+            .phpunit.cache/**
+            README.md
