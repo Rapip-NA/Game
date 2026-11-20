@@ -96,9 +96,17 @@
       padding: 16px 16px 60px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 24px;
       align-items: center;
       text-align: center;
+    }
+
+    #stateIdle, #statePlaying, #stateFinish {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
     }
 
     h1 {
@@ -490,12 +498,6 @@
       </ul>
     </div>
 
-    <!-- Contoh topik -->
-    <div class="card">
-      <div style="font-family:'Luckiest Guy',cursive;font-size:20px;margin-bottom:14px;">💡 CONTOH TOPIK HARI INI</div>
-      <ul class="preview-list" id="topicPreview"></ul>
-    </div>
-
   </div><!-- /stateIdle -->
 
   <!-- ===== STATE: PLAYING ===== -->
@@ -751,7 +753,7 @@
   function restartGame() {
     fetch("{{ route('games.speaking.topics') }}")
       .then(r => r.json())
-      .then(data => { allTopics = data.topics; renderPreview(); })
+      .then(data => { allTopics = data.topics; })
       .catch(() => {});
 
     hide('stateFinish');
@@ -808,7 +810,6 @@
   // ===== INIT =====
   window.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
-    renderPreview();
     // Set the ring circumference
     document.getElementById('timerRing').style.strokeDasharray = CIRCUMFERENCE;
   });
