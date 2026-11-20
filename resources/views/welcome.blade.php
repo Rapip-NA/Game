@@ -471,13 +471,16 @@
             <!-- Filter Pills -->
             <div id="filterBar" class="flex items-center gap-2.5 overflow-x-auto py-5">
                 <button data-cat="Semua" class="filter-pill active sticker-btn bg-ink text-white font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
-                    SEMUA GAME (3)
+                    SEMUA GAME (4)
                 </button>
                 <button data-cat="Teka-Teki & Logika" class="filter-pill sticker-btn bg-white text-ink font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
                     🧩 TEKA-TEKI & LOGIKA
                 </button>
                 <button data-cat="Aksi & Refleks" class="filter-pill sticker-btn bg-white text-ink font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
                     ⚡ AKSI & TIM
+                </button>
+                <button data-cat="Speaking" class="filter-pill sticker-btn bg-white text-ink font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
+                    🎤 SPEAKING
                 </button>
             </div>
 
@@ -716,6 +719,17 @@
                 url: "{{ route('games.siapa-kembaranku.host') }}",
                 desc: "Game sosial multi-device untuk kelas! Scan QR rahasia temanmu lewat HP dan tebak siapa kembaran logomu.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="25" y="22" width="60" height="66" rx="14" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="55" y="65" text-anchor="middle" font-size="34">🎭</text><rect x="95" y="22" width="60" height="66" rx="14" fill="#0B44D6" stroke="#111111" stroke-width="2.5"/><text x="125" y="65" text-anchor="middle" font-size="34">🔍</text><circle cx="90" cy="55" r="16" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><text x="90" y="60" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="900" font-size="11" fill="#111111">QR</text></svg>`
+            },
+            {
+                id: 'speaking',
+                title: "SPEAKING ROULETTE",
+                category: "Speaking",
+                cardBg: "bg-cobalt",
+                textColor: "text-white",
+                tagText: "SPEAKING KELAS",
+                url: "{{ route('games.speaking') }}",
+                desc: "Topik speaking bahasa Indonesia acak muncul tiap 2 menit! Cocok untuk latihan berbicara di kelas.",
+                art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="30" y="20" width="120" height="70" rx="18" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="90" y="65" text-anchor="middle" font-size="44">🎤</text><rect x="60" y="94" width="60" height="8" rx="4" fill="#FFD21E" stroke="#111111" stroke-width="2"/><rect x="85" y="88" width="10" height="8" rx="2" fill="#FFD21E" stroke="#111111" stroke-width="2"/></svg>`
             }
         ];
 

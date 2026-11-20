@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SiapaKembarankuController;
+use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\SuperPasswordController;
 use App\Http\Controllers\SusunUrutanController;
 use Illuminate\Support\Facades\Route;
@@ -33,12 +34,17 @@ Route::prefix('games')->name('games.')->group(function () {
         Route::post('/next-round', [SiapaKembarankuController::class, 'nextRound'])->name('next-round');
         Route::get('/state', [SiapaKembarankuController::class, 'state'])->name('state');
     });
+
+    // Speaking Roulette
+    Route::get('/speaking', [SpeakingController::class, 'index'])->name('speaking');
+    Route::get('/speaking/topics', [SpeakingController::class, 'getTopics'])->name('speaking.topics');
 });
 
 // Friendly aliases
 Route::get('/super-password', [SuperPasswordController::class, 'index']);
 Route::get('/susun-urutan', [SusunUrutanController::class, 'index']);
 Route::get('/tim{team}/{player}', [SusunUrutanController::class, 'playerClue']);
+Route::get('/speaking', [SpeakingController::class, 'index']);
 
 // Siapa Kembaranku aliases
 Route::get('/siapa-kembaranku', fn () => redirect()->route('games.siapa-kembaranku.host'));
