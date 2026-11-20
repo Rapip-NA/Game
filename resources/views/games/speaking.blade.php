@@ -430,10 +430,15 @@
 
 <!-- ======= TOP NAV ======= -->
 <header class="top-nav">
-  <a href="{{ route('home') }}" class="back-btn">
-    <i data-lucide="arrow-left" style="width:16px;height:16px;stroke-width:3;"></i>
-    KEMBALI
-  </a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="{{ route('home') }}" class="back-btn">
+      <i data-lucide="arrow-left" style="width:16px;height:16px;stroke-width:3;"></i>
+      KEMBALI
+    </a>
+    <button id="btnSound" onclick="toggleSound()" class="back-btn" style="cursor:pointer;">
+      <span id="soundIcon">🔊</span> <span id="soundLabel">SUARA ON</span>
+    </button>
+  </div>
   <div style="font-family:'Patrick Hand',cursive;font-weight:700;font-size:14px;color:var(--muted);">
     {{ $totalTopics }}+ topik tersedia
   </div>
@@ -565,6 +570,76 @@
 </main>
 
 <script>
+  // ===== SOUND SYNTHESIZER (WEB AUDIO API) =====
+  let soundEnabled = true;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx = null;
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new AudioCtx();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playTone(freq, type, duration, delay = 0, vol = 0.15) {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      setTimeout(() => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      }, delay);
+    } catch (e) {
+      console.warn('Audio error:', e);
+    }
+  }
+
+  function soundTick() {
+    playTone(700, 'triangle', 0.04, 0, 0.08);
+  }
+
+  function soundWarningTick() {
+    playTone(950, 'sine', 0.08, 0, 0.18);
+  }
+
+  function soundNextTopic() {
+    // Whoosh + 2-tone melodic chime
+    playTone(440, 'triangle', 0.12, 0, 0.2);
+    playTone(660, 'triangle', 0.15, 90, 0.2);
+    playTone(880, 'sine', 0.25, 180, 0.22);
+  }
+
+  function soundFinish() {
+    playTone(523.25, 'triangle', 0.18, 0, 0.25);
+    playTone(659.25, 'triangle', 0.18, 160, 0.25);
+    playTone(783.99, 'triangle', 0.2, 320, 0.25);
+    playTone(1046.50, 'sine', 0.5, 480, 0.3);
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    const icon = document.getElementById('soundIcon');
+    const label = document.getElementById('soundLabel');
+    if (icon) icon.textContent = soundEnabled ? '🔊' : '🔇';
+    if (label) label.textContent = soundEnabled ? 'SUARA ON' : 'SUARA OFF';
+    if (soundEnabled) {
+      getAudioContext();
+      soundTick();
+    }
+  }
+
   // ===== DATA =====
   let allTopics   = @json($topics);
   let sessionTopics = [];
@@ -603,6 +678,8 @@
 
   // ===== START GAME =====
   function startGame() {
+    getAudioContext();
+    soundNextTopic();
     totalPhases = parseInt(document.getElementById('topicCount').value);
     secPerPhase = parseInt(document.getElementById('minutesPerTopic').value) * 60;
 
@@ -690,6 +767,18 @@
     if (isPaused) return;
     secLeft--;
     renderTimer();
+
+    // Suara timer detik
+    if (secLeft > 0) {
+      if (secLeft <= 5) {
+        // 5 detik terakhir bunyi warning lebih tinggi & tegas
+        soundWarningTick();
+      } else if (secLeft <= 10) {
+        // 10 detik terakhir tick normal tiap detik
+        soundTick();
+      }
+    }
+
     if (secLeft <= 0) nextTopic();
   }
 
@@ -720,6 +809,7 @@
       endGame();
       return;
     }
+    soundNextTopic();
     startTimer();
     showTopic(currentIdx);
   }
@@ -732,6 +822,7 @@
   // ===== END =====
   function endGame() {
     clearInterval(timerId);
+    soundFinish();
     hide('statePlaying');
     show('stateFinish');
 
