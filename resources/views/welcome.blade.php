@@ -142,7 +142,7 @@
                     <a href="#tentang" class="hover:text-cobalt transition-colors">TENTANG</a>
                     <a href="#kategori" class="hover:text-cobalt transition-colors">KATEGORI</a>
                     <a href="#koleksi" class="hover:text-cobalt transition-colors">KOLEKSI GAME</a>
-                    <a href="#ulasan" class="hover:text-cobalt transition-colors">ULASAN</a>
+                    <a href="#saran-game" class="hover:text-cobalt transition-colors">SARAN GAME</a>
                 </nav>
 
                 <!-- Tombol Kuning GAS MAIN -> -->
@@ -499,73 +499,179 @@
             </div>
         </section>
 
-        <!-- 6. TESTIMONI PEMAIN (BANNER MERAH-ORANYE LEBAR PENUH) -->
-        <section id="ulasan" class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 6. SARAN GAME (REQUEST USER) -->
+        <section id="saran-game" class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-vermilion border-[3px] border-ink rounded-[36px] p-6 sm:p-10 shadow-[8px_8px_0px_#111111]">
-                <div class="grid lg:grid-cols-12 gap-8 items-center">
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- Kiri: Tulisan KATA PEMAIN + Garis Zig-Zag Kuning -->
-                    <div class="lg:col-span-3 text-center lg:text-left space-y-3">
-                        <h2 class="font-comic text-4xl sm:text-5xl text-white leading-none -rotate-2 inline-block">
-                            KATA<br>PEMAIN
-                        </h2>
-                        <!-- Garis Zig-Zag Kuning -->
-                        <svg class="w-36 h-6 mx-auto lg:mx-0" viewBox="0 0 140 24" fill="none">
-                            <path d="M4 16L24 6L44 18L64 6L84 18L104 6L124 18L136 10" stroke="#FFD21E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <p class="text-xs sm:text-sm font-bold text-white/95">
-                            Ribuan pemain udah ketagihan main di sela jam istirahat!
-                        </p>
+                    <!-- Kiri: Judul SARAN GAME & Form Request Ide Game -->
+                    <div class="lg:col-span-5 space-y-4 text-white">
+                        <div class="text-center lg:text-left space-y-2">
+                            <span class="px-3 py-1 rounded-full bg-sunny text-ink border-2 border-ink text-xs font-black uppercase inline-block">
+                                💡 IDE PEMAIN
+                            </span>
+                            <h2 class="font-comic text-4xl sm:text-5xl text-white leading-none -rotate-1 block">
+                                SARAN<br>GAME
+                            </h2>
+                            <!-- Garis Zig-Zag Kuning -->
+                            <svg class="w-36 h-6 mx-auto lg:mx-0" viewBox="0 0 140 24" fill="none">
+                                <path d="M4 16L24 6L44 18L64 6L84 18L104 6L124 18L136 10" stroke="#FFD21E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <p class="text-xs sm:text-sm font-bold text-white/95 leading-relaxed">
+                                Mau game seperti apa lagi di MainYuk? Tulis idemu di bawah, request game favoritmu akan kami baca dan wujudkan!
+                            </p>
+                        </div>
+
+                        <!-- Notifikasi Sukses / Error Form -->
+                        @if (session('suggestion_success'))
+                            <div class="bg-sunny border-2 border-ink text-ink p-3.5 rounded-2xl font-bold text-xs shadow-[3px_3px_0px_#111]">
+                                {{ session('suggestion_success') }}
+                            </div>
+                        @endif
+
+                        <div id="suggestionAlert" class="hidden p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111]"></div>
+
+                        <!-- Form Input Saran Game -->
+                        <form id="suggestionForm" action="{{ route('game-suggestions.store') }}" method="POST" class="bg-white border-[3px] border-ink rounded-3xl p-5 sm:p-6 text-ink shadow-[5px_5px_0px_#111] space-y-3">
+                            @csrf
+                            <div>
+                                <label for="sug_name" class="block text-xs font-extrabold uppercase text-ink mb-1">
+                                    👤 NAMA / PANGGILAN
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="name" 
+                                    id="sug_name" 
+                                    required 
+                                    placeholder="Contoh: Budi / Tim Kelas 12" 
+                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="sug_title" class="block text-xs font-extrabold uppercase text-ink mb-1">
+                                    🎮 IDE / NAMA GAME YANG DIINGINKAN
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="game_title" 
+                                    id="sug_title" 
+                                    required 
+                                    placeholder="Contoh: Game Tebak Lagu 90an" 
+                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="sug_desc" class="block text-xs font-extrabold uppercase text-ink mb-1">
+                                    📝 KONSEP / CARA MAINNYA
+                                </label>
+                                <textarea 
+                                    name="description" 
+                                    id="sug_desc" 
+                                    rows="3" 
+                                    required 
+                                    placeholder="Ceritakan singkat cara mainnya atau aturannya..." 
+                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
+                                ></textarea>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                id="btnSubmitSuggestion" 
+                                class="w-full sticker-btn bg-sunny hover:bg-yellow-400 text-ink font-comic text-base sm:text-lg py-2.5 rounded-xl tracking-wide flex items-center justify-center gap-2"
+                            >
+                                <span>KIRIM SARAN GAME</span>
+                                <span class="font-sans font-black">🚀</span>
+                            </button>
+                        </form>
                     </div>
 
-                    <!-- Kanan: 3 Kartu Testimoni Putih Berbingkai Hitam -->
-                    <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <!-- Testimoni 1 -->
-                        <div class="bg-white border-[3px] border-ink rounded-2xl p-5 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                            <p class="text-xs sm:text-sm font-bold text-ink leading-relaxed">
-                                “Penyelamat banget pas lagi nunggu kelas atau istirahat kerja! Tinggal klik langsung main tanpa kuota jebol.”
-                            </p>
-                            <div class="flex items-center gap-3 mt-4 pt-3 border-t-2 border-slate-100">
-                                <div class="w-10 h-10 rounded-full bg-sunny border-2 border-ink flex items-center justify-center font-comic text-base text-ink shrink-0">
-                                    DR
-                                </div>
-                                <div>
-                                    <p class="font-extrabold text-xs text-ink">DIMAS R.</p>
-                                    <p class="text-[11px] font-semibold text-slate-500">MAHASISWA & GAMER KASUAL</p>
-                                </div>
-                            </div>
+                    <!-- Kanan: Daftar Saran Game yang Masuk dari Komunitas -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex items-center justify-between text-white border-b-2 border-white/30 pb-2">
+                            <h3 class="font-comic text-xl sm:text-2xl tracking-wide text-white flex items-center gap-2">
+                                <span>📬</span> REQUEST DARI PEMAIN
+                            </h3>
+                            <span class="text-xs font-bold text-white/90">Terbaru</span>
                         </div>
 
-                        <!-- Testimoni 2 -->
-                        <div class="bg-white border-[3px] border-ink rounded-2xl p-5 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                            <p class="text-xs sm:text-sm font-bold text-ink leading-relaxed">
-                                “Desain webnya ceria banget kayak komik! Game Super Password sama Susun Urutan seru banget dimainkan bareng teman.”
-                            </p>
-                            <div class="flex items-center gap-3 mt-4 pt-3 border-t-2 border-slate-100">
-                                <div class="w-10 h-10 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-base text-ink shrink-0">
-                                    NA
+                        <div id="recentSuggestionsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @if(isset($recentSuggestions) && $recentSuggestions->isNotEmpty())
+                                @foreach($recentSuggestions as $sug)
+                                    <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-center justify-between gap-2 mb-2">
+                                                <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink truncate max-w-[150px]">
+                                                    {{ $sug->game_title }}
+                                                </span>
+                                                <span class="text-[10px] font-bold text-slate-400 shrink-0">
+                                                    {{ $sug->created_at->diffForHumans() }}
+                                                </span>
+                                            </div>
+                                            <p class="font-doodle text-base font-bold text-ink leading-relaxed">
+                                                “{{ $sug->description }}”
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
+                                            <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
+                                                {{ strtoupper(substr($sug->name, 0, 1)) }}
+                                            </div>
+                                            <div>
+                                                <p class="font-extrabold text-xs text-ink leading-tight">{{ $sug->name }}</p>
+                                                <p class="text-[10px] font-semibold text-slate-500">Pemain MainYuk</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <!-- Kartu Contoh jika belum ada saran di DB -->
+                                <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between gap-2 mb-2">
+                                            <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink">
+                                                Tebak Suara Hewan
+                                            </span>
+                                            <span class="text-[10px] font-bold text-slate-400">Baru</span>
+                                        </div>
+                                        <p class="font-doodle text-base font-bold text-ink leading-relaxed">
+                                            “Seru kalau ada game tebak efek suara aneh atau suara hewan yang cepat-cepatan pencet bel di HP!”
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
+                                        <div class="w-7 h-7 rounded-full bg-sunny border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
+                                            D
+                                        </div>
+                                        <div>
+                                            <p class="font-extrabold text-xs text-ink leading-tight">Dimas R.</p>
+                                            <p class="text-[10px] font-semibold text-slate-500">Mahasiswa</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-extrabold text-xs text-ink">NADIA A.</p>
-                                    <p class="text-[11px] font-semibold text-slate-500">ILLUSTRATOR FREELANCE</p>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Testimoni 3 -->
-                        <div class="bg-white border-[3px] border-ink rounded-2xl p-5 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                            <p class="text-xs sm:text-sm font-bold text-ink leading-relaxed">
-                                “Sering adu skor tertinggi bareng teman sekantor tiap jam makan siang. Simpel tapi kompetitif banget!”
-                            </p>
-                            <div class="flex items-center gap-3 mt-4 pt-3 border-t-2 border-slate-100">
-                                <div class="w-10 h-10 rounded-full bg-cobalt border-2 border-ink flex items-center justify-center font-comic text-base text-white shrink-0">
-                                    RP
+                                <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between gap-2 mb-2">
+                                            <span class="px-2 py-0.5 rounded-full bg-pastelPink border border-ink text-[10px] font-extrabold uppercase text-ink">
+                                                Sambung Pantun
+                                            </span>
+                                            <span class="text-[10px] font-bold text-slate-400">Baru</span>
+                                        </div>
+                                        <p class="font-doodle text-base font-bold text-ink leading-relaxed">
+                                            “Bikin game sambung pantun lucu 2 tim secara acak, tiap tim dapat kata rima acak!”
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
+                                        <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
+                                            N
+                                        </div>
+                                        <div>
+                                            <p class="font-extrabold text-xs text-ink leading-tight">Nadia A.</p>
+                                            <p class="text-[10px] font-semibold text-slate-500">Illustrator</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-extrabold text-xs text-ink">REZA P.</p>
-                                    <p class="text-[11px] font-semibold text-slate-500">UI/UX DESIGNER</p>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
 
@@ -656,6 +762,8 @@
                         <li><a href="#tentang" class="hover:text-sunny transition-colors">Tentang Kami</a></li>
                         <li><a href="#kategori" class="hover:text-sunny transition-colors">Kategori</a></li>
                         <li><a href="#koleksi" class="hover:text-sunny transition-colors">Koleksi Game</a></li>
+                        <li><a href="#saran-game" class="hover:text-sunny transition-colors">Saran Game</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-sunny text-amber-300 transition-colors">Login Admin 🔐</a></li>
                     </ul>
                 </div>
 
@@ -694,6 +802,7 @@
                 cardBg: "bg-sunny",
                 textColor: "text-ink",
                 tagText: "TEBAK KATA 2P",
+                isMaintenance: {{ ($gameStatuses['super-password']->is_maintenance ?? false) ? 'true' : 'false' }},
                 url: "{{ route('games.super-password') }}",
                 desc: "Game tebak kata seru 2 pemain! Satu pemberi petunjuk, satu penebak kata rahasia sebelum waktu habis.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="36" y="22" width="108" height="66" rx="16" fill="#0B44D6" stroke="#111111" stroke-width="3"/><rect x="44" y="30" width="92" height="50" rx="10" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><text x="90" y="66" text-anchor="middle" font-family="Luckiest Guy" font-size="34" fill="#EB3B24">A - Z</text><circle cx="138" cy="24" r="14" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="138" y="30" text-anchor="middle" font-size="14">🔑</text></svg>`
@@ -705,6 +814,7 @@
                 cardBg: "bg-cobalt",
                 textColor: "text-white",
                 tagText: "GAME TIM 2-5 TIM",
+                isMaintenance: {{ ($gameStatuses['susun-urutan']->is_maintenance ?? false) ? 'true' : 'false' }},
                 url: "{{ route('games.susun-urutan') }}",
                 desc: "Game tim tanpa bicara! Tiap orang scan 1 kartu rahasia via QR di HP dan berbaris dalam urutan yang tepat.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="25" y="28" width="36" height="52" rx="8" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="43" y="62" text-anchor="middle" font-family="Luckiest Guy" font-size="24" fill="#111111">1</text><rect x="72" y="22" width="36" height="58" rx="8" fill="#EB3B24" stroke="#111111" stroke-width="2.5"/><text x="90" y="58" text-anchor="middle" font-family="Luckiest Guy" font-size="24" fill="#FFFFFF">2</text><rect x="119" y="28" width="36" height="52" rx="8" fill="#F9B4C4" stroke="#111111" stroke-width="2.5"/><text x="137" y="62" text-anchor="middle" font-family="Luckiest Guy" font-size="24" fill="#111111">3</text><path d="M43 90H137M137 90L127 84M137 90L127 96" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
@@ -716,6 +826,7 @@
                 cardBg: "bg-vermilion",
                 textColor: "text-white",
                 tagText: "MULTI-DEVICE 5-20P",
+                isMaintenance: {{ ($gameStatuses['siapa-kembaranku']->is_maintenance ?? false) ? 'true' : 'false' }},
                 url: "{{ route('games.siapa-kembaranku.host') }}",
                 desc: "Game sosial multi-device untuk kelas! Scan QR rahasia temanmu lewat HP dan tebak siapa kembaran logomu.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="25" y="22" width="60" height="66" rx="14" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="55" y="65" text-anchor="middle" font-size="34">🎭</text><rect x="95" y="22" width="60" height="66" rx="14" fill="#0B44D6" stroke="#111111" stroke-width="2.5"/><text x="125" y="65" text-anchor="middle" font-size="34">🔍</text><circle cx="90" cy="55" r="16" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><text x="90" y="60" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="900" font-size="11" fill="#111111">QR</text></svg>`
@@ -727,6 +838,7 @@
                 cardBg: "bg-cobalt",
                 textColor: "text-white",
                 tagText: "SPEAKING KELAS",
+                isMaintenance: {{ ($gameStatuses['speaking']->is_maintenance ?? false) ? 'true' : 'false' }},
                 url: "{{ route('games.speaking') }}",
                 desc: "Topik speaking bahasa Indonesia acak muncul tiap 2 menit! Cocok untuk latihan berbicara di kelas.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="30" y="20" width="120" height="70" rx="18" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/><text x="90" y="65" text-anchor="middle" font-size="44">🎤</text><rect x="60" y="94" width="60" height="8" rx="4" fill="#FFD21E" stroke="#111111" stroke-width="2"/><rect x="85" y="88" width="10" height="8" rx="2" fill="#FFD21E" stroke="#111111" stroke-width="2"/></svg>`
@@ -754,14 +866,21 @@
             }
 
             empty.classList.add("hidden");
-            grid.innerHTML = filtered.map(game => `
+            grid.innerHTML = filtered.map(game => {
+                const badge = game.isMaintenance 
+                    ? `<span class="px-2.5 py-1 rounded-full bg-vermilion text-white border-2 border-ink text-[10px] font-extrabold uppercase animate-pulse">🔒 MAINTENANCE</span>`
+                    : `<span class="px-2.5 py-1 rounded-full bg-white text-ink border-2 border-ink text-[10px] font-extrabold uppercase">${game.tagText}</span>`;
+                
+                const actionBtn = game.isMaintenance
+                    ? `<span class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-vermilion text-white border border-ink">MAINTENANCE 🛠️</span>`
+                    : `<a href="${game.url}" class="text-xs font-extrabold underline decoration-2 underline-offset-2 text-ink group-hover:text-vermilion">MAIN →</a>`;
+
+                return `
                 <article class="group cursor-pointer" onclick="window.location.href='${game.url}'">
                     <!-- Poster Card -->
                     <div class="sticker-card ${game.cardBg} ${game.textColor} rounded-3xl p-5 h-60 flex flex-col justify-between relative overflow-hidden">
                         <div class="flex items-center justify-between z-10">
-                            <span class="px-2.5 py-1 rounded-full bg-white text-ink border-2 border-ink text-[10px] font-extrabold uppercase">
-                                ${game.tagText}
-                            </span>
+                            ${badge}
                             <span class="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-bold group-hover:scale-110 transition-transform shrink-0">
                                 ▶
                             </span>
@@ -782,12 +901,11 @@
                             <h4 class="font-extrabold text-sm text-ink group-hover:text-cobalt transition-colors">${game.title}</h4>
                             <p class="text-xs font-semibold text-slate-500">${game.category}</p>
                         </div>
-                        <a href="${game.url}" class="text-xs font-extrabold underline decoration-2 underline-offset-2 text-ink group-hover:text-vermilion">
-                            MAIN →
-                        </a>
+                        ${actionBtn}
                     </div>
                 </article>
-            `).join("");
+                `;
+            }).join("");
         }
 
         // Filter Kategori
@@ -833,6 +951,86 @@
             if (rand && rand.url) {
                 window.location.href = rand.url;
             }
+        }
+
+        // Form Saran Game Handler (AJAX)
+        const sugForm = document.getElementById("suggestionForm");
+        if (sugForm) {
+            sugForm.addEventListener("submit", async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById("btnSubmitSuggestion");
+                const alertBox = document.getElementById("suggestionAlert");
+                const originalText = btn.innerHTML;
+                
+                btn.disabled = true;
+                btn.innerHTML = `<span>MENGIRIMKAN...</span> <span class="animate-spin">⏳</span>`;
+                alertBox.className = "hidden";
+
+                const formData = new FormData(sugForm);
+
+                try {
+                    const response = await fetch("{{ route('game-suggestions.store') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || formData.get('_token')
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.status === 'success') {
+                        alertBox.className = "p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111] bg-sunny text-ink";
+                        alertBox.innerHTML = `🎉 ${result.message}`;
+                        sugForm.reset();
+
+                        // Tambahkan kartu ide baru ke daftar
+                        const list = document.getElementById("recentSuggestionsList");
+                        if (list && result.data) {
+                            const newCard = document.createElement("div");
+                            newCard.className = "bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between animate-fadeIn";
+                            newCard.innerHTML = `
+                                <div>
+                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                        <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink truncate max-w-[150px]">
+                                            ${result.data.game_title}
+                                        </span>
+                                        <span class="text-[10px] font-bold text-slate-400 shrink-0">
+                                            Baru saja
+                                        </span>
+                                    </div>
+                                    <p class="font-doodle text-base font-bold text-ink leading-relaxed">
+                                        “${result.data.description}”
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
+                                    <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
+                                        ${result.data.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p class="font-extrabold text-xs text-ink leading-tight">${result.data.name}</p>
+                                        <p class="text-[10px] font-semibold text-slate-500">Pemain MainYuk</p>
+                                    </div>
+                                </div>
+                            `;
+                            list.prepend(newCard);
+                        }
+                    } else {
+                        const errMsg = result.message || (result.errors ? Object.values(result.errors).flat().join('<br>') : 'Gagal mengirim saran. Cek isianmu.');
+                        alertBox.className = "p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111] bg-rose-100 text-rose-800";
+                        alertBox.innerHTML = `⚠️ ${errMsg}`;
+                    }
+                } catch (err) {
+                    // Fallback to standard form submit jika fetch gagal
+                    sugForm.submit();
+                    return;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
         }
 
         // Inisialisasi Awal
