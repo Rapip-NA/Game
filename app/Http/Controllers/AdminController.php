@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GameMaintenance;
 use App\Models\GameSuggestion;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -35,9 +36,13 @@ class AdminController extends Controller
     /**
      * Toggle maintenance mode for a specific game.
      */
-    public function toggleMaintenance(Request $request, string $gameKey): RedirectResponse
+    public function toggleMaintenance(Request $request, string $gameKey): JsonResponse|RedirectResponse
     {
         if (! array_key_exists($gameKey, GameMaintenance::AVAILABLE_GAMES)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Game tidak dikenali.'], 400);
+            }
+
             return back()->with('error', 'Game tidak dikenali.');
         }
 
@@ -59,16 +64,29 @@ class AdminController extends Controller
         $game->save();
 
         $statusLabel = $game->is_maintenance ? 'DIKUNCI (SEDANG MAINTENANCE)' : 'DIAKTIFKAN KEMBALI (BISA DIMAINKAN)';
+        $message = "Status game {$game->game_name} berhasil diubah menjadi: {$statusLabel}!";
 
-        return back()->with('success', "Status game {$game->game_name} berhasil diubah menjadi: {$statusLabel}!");
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'game' => $game,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
      * Update maintenance message for a game.
      */
-    public function updateMaintenanceMessage(Request $request, string $gameKey): RedirectResponse
+    public function updateMaintenanceMessage(Request $request, string $gameKey): JsonResponse|RedirectResponse
     {
         if (! array_key_exists($gameKey, GameMaintenance::AVAILABLE_GAMES)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Game tidak dikenali.'], 400);
+            }
+
             return back()->with('error', 'Game tidak dikenali.');
         }
 
@@ -84,16 +102,37 @@ class AdminController extends Controller
         $game->message = (string) $request->input('message');
         $game->save();
 
-        return back()->with('success', "Pesan maintenance untuk {$game->game_name} berhasil diperbarui!");
+        $message = "Pesan maintenance untuk {$game->game_name} berhasil diperbarui!";
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'game' => $game,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
      * Delete a game suggestion.
      */
-    public function deleteSuggestion(GameSuggestion $suggestion): RedirectResponse
+    public function deleteSuggestion(Request $request, GameSuggestion $suggestion): JsonResponse|RedirectResponse
     {
+        $id = $suggestion->id;
         $suggestion->delete();
 
-        return back()->with('success', 'Saran game berhasil dihapus.');
+        $message = 'Saran game berhasil dihapus dari daftar.';
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'id' => $id,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 }

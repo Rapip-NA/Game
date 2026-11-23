@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Admin Panel — MainYuk!</title>
+
+  <!-- Google Fonts: Luckiest Guy, Patrick Hand & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cobalt: '#0B44D6',
+            sunny: '#FFD21E',
+            vermilion: '#EB3B24',
+            pastelPink: '#F9B4C4',
+            paper: '#FAFAFA',
+            ink: '#111111'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #FAFAFA;
+      --card: #FFFFFF;
+      --text: #111111;
+      --muted: #475569;
+      --line: #111111;
+      --cobalt: #0B44D6;
+      --sunny: #FFD21E;
+      --vermilion: #EB3B24;
+      --pink: #F9B4C4;
+      --green: #22C55E;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(#CBD5E1 1.4px, transparent 1.4px);
+      background-size: 22px 22px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    .font-comic { font-family: 'Luckiest Guy', cursive; }
+    .font-doodle { font-family: 'Patrick Hand', cursive; }
+
+    .sticker-card {
+      background: var(--card);
+      border: 3px solid var(--line);
+      box-shadow: 6px 6px 0px var(--line);
+      border-radius: 24px;
+      transition: transform 0.15s ease;
+    }
+
+    .sticker-btn {
+      border: 2.5px solid var(--line);
+      box-shadow: 3.5px 3.5px 0px var(--line);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .sticker-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5.5px 5.5px 0px var(--line);
+    }
+    .sticker-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--line);
+    }
+  </style>
+</head>
+<body class="pb-24">
+
+  <!-- Header Nav -->
+  <header class="bg-cobalt border-b-[3.5px] border-black text-white py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-[0_4px_0_#111]">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-sunny border-2 border-black flex items-center justify-center text-xl text-black shadow-[2px_2px_0_#000]">
+          ⚡
+        </span>
+        <div>
+          <h1 class="font-comic text-2xl sm:text-3xl tracking-wide leading-none text-white">
+            MAINYUK! <span class="text-sunny">ADMIN</span>
+          </h1>
+          <p class="text-xs font-semibold text-blue-200 mt-0.5">Control Panel & Pengaturan Game</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="#kelola-game" class="sticker-btn bg-white text-black font-extrabold text-xs sm:text-sm px-4 py-2 rounded-full flex items-center gap-1.5">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          LIHAT WEBSITE
+        </a>
+
+        <button type="button" onclick="showToast('Sesi admin masih aktif dalam mode preview!', 'info')" class="sticker-btn bg-vermilion text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-full flex items-center gap-1.5">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          LOGOUT
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+
+    <!-- Flash Alert Container -->
+    <div id="flashContainer" class="hidden"></div>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div class="sticker-card bg-white p-5 flex flex-col justify-between">
+        <span class="text-xs font-extrabold text-slate-500 uppercase">Total Game</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span id="statTotal" class="font-comic text-3xl sm:text-4xl text-black">4</span>
+          <span class="text-2xl">🎮</span>
+        </div>
+      </div>
+
+      <div class="sticker-card bg-emerald-50 p-5 flex flex-col justify-between">
+        <span class="text-xs font-extrabold text-emerald-700 uppercase">Game Aktif</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span id="statActive" class="font-comic text-3xl sm:text-4xl text-emerald-600">3</span>
+          <span class="text-2xl">🟢</span>
+        </div>
+      </div>
+
+      <div id="cardMaint" class="sticker-card bg-amber-100 p-5 flex flex-col justify-between">
+        <span class="text-xs font-extrabold text-amber-800 uppercase">Sedang Maintenance</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span id="statMaint" class="font-comic text-3xl sm:text-4xl text-amber-600">1</span>
+          <span class="text-2xl">🛠️</span>
+        </div>
+      </div>
+
+      <div class="sticker-card bg-blue-50 p-5 flex flex-col justify-between">
+        <span class="text-xs font-extrabold text-blue-700 uppercase">Saran Game Masuk</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span id="statSugg" class="font-comic text-3xl sm:text-4xl text-cobalt">3</span>
+          <span class="text-2xl">💡</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: KONTROL STATUS GAME / MAINTENANCE -->
+    <section id="kelola-game" class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-black pb-3">
+        <div>
+          <h2 class="font-comic text-2xl sm:text-3xl text-black flex items-center gap-2">
+            <span>🛠️</span> KELOLA STATUS GAME (KUNCI / BUKA)
+          </h2>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600">
+            Kunci game jika sedang maintenance. Saat dikunci, pemain yang membuka game akan otomatis dialihkan ke halaman info maintenance.
+          </p>
+        </div>
+      </div>
+
+      <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Kartu Status Game dirender via JavaScript -->
+      </div>
+    </section>
+
+    <!-- SECTION 2: SARAN & REQUEST GAME DARI USER -->
+    <section class="space-y-4 pt-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-black pb-3">
+        <div>
+          <h2 class="font-comic text-2xl sm:text-3xl text-black flex items-center gap-2">
+            <span>💡</span> SARAN & REQUEST GAME DARI PEMAIN
+            <span id="suggBadge" class="px-2.5 py-0.5 rounded-full bg-sunny border-2 border-black font-extrabold text-xs text-black">
+              3 Saran
+            </span>
+          </h2>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600">
+            Ide-ide kreatif dari pemain yang dikirim melalui formulir "Saran Game" di landing page.
+          </p>
+        </div>
+
+        <button onclick="openAddSuggestionModal()" class="sticker-btn bg-sunny text-black font-extrabold text-xs px-4 py-2.5 rounded-full flex items-center gap-1.5 self-start sm:self-auto">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          SIMULASI SARAN BARU
+        </button>
+      </div>
+
+      <div id="suggestionsContainer">
+        <!-- Kartu Saran dirender via JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL KONFIRMASI HAPUS SARAN -->
+  <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="sticker-card bg-white max-w-md w-full p-6 text-center space-y-4">
+      <div class="w-14 h-14 rounded-2xl bg-rose-100 border-2 border-black mx-auto flex items-center justify-center text-3xl shadow-[3px_3px_0_#000]">
+        🗑️
+      </div>
+      <h3 class="font-comic text-2xl text-black">HAPUS SARAN GAME INI?</h3>
+      <p class="text-sm font-semibold text-slate-600">
+        Saran game dari pemain ini akan dihapus dari daftar antrean request.
+      </p>
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="closeDeleteModal()" class="sticker-btn bg-white text-black font-extrabold text-xs px-5 py-2.5 rounded-xl">
+          BATAL
+        </button>
+        <button id="confirmDeleteBtn" class="sticker-btn bg-vermilion text-white font-extrabold text-xs px-5 py-2.5 rounded-xl">
+          YA, HAPUS!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SIMULASI TAMBAH SARAN BARU -->
+  <div id="addModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="sticker-card bg-white max-w-md w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b-2 border-black pb-3">
+        <h3 class="font-comic text-2xl text-black">💡 TAMBAH REQUEST GAME</h3>
+        <button onclick="closeAddModal()" class="sticker-btn bg-vermilion text-white p-1.5 rounded-lg">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <form id="addSuggestionForm" class="space-y-3 text-left">
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Nama Pemain</label>
+          <input type="text" id="inputPlayerName" required placeholder="Contoh: Raka Pratama" class="w-full p-2.5 border-2 border-black rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt">
+        </div>
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Judul Ide Game</label>
+          <input type="text" id="inputGameTitle" required placeholder="Contoh: Tebak Gambar Kilat" class="w-full p-2.5 border-2 border-black rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt">
+        </div>
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Deskripsi Konsep</label>
+          <textarea id="inputGameDesc" rows="3" required placeholder="Jelaskan cara main singkatnya..." class="w-full p-2.5 border-2 border-black rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-cobalt"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddModal()" class="sticker-btn bg-white text-black font-extrabold text-xs px-4 py-2 rounded-xl">Batal</button>
+          <button type="submit" class="sticker-btn bg-cobalt text-white font-extrabold text-xs px-5 py-2 rounded-xl">Kirim Saran →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Data State Status Game (Sesuai referensi slug & struktur backend)
+    let gameStatuses = {
+      'super-password': {
+        game_name: 'Super Password',
+        icon: '🔑',
+        is_maintenance: false,
+        message: 'maaf ya gamenya lagi di maintanance sama admin, jadi gak bisa dipake dlu'
+      },
+      'susun-urutan': {
+        game_name: 'Susun Urutan',
+        icon: '🔢',
+        is_maintenance: false,
+        message: 'Sedang upgrade koleksi tema baru biar makin seru dimainkan!'
+      },
+      'siapa-kembaranku': {
+        game_name: 'Siapa Kembaranku?',
+        icon: '🎭',
+        is_maintenance: true,
+        message: 'maaf ya gamenya lagi di maintanance sama admin, jadi gak bisa dipake dlu'
+      },
+      'speaking': {
+        game_name: 'Speaking Challenge',
+        icon: '🎤',
+        is_maintenance: false,
+        message: 'Fitur mikrofon sedang dikalibrasi oleh tim MainYuk.'
+      }
+    };
+
+    // Data State Saran Game dari User
+    let suggestions = [
+      {
+        id: 104,
+        name: 'Dimas Ramadhan',
+        timeAgo: '12 menit yang lalu',
+        dateStr: '23 Nov 2026, 09:55',
+        game_title: 'Tebak Lagu 5 Detik',
+        description: 'Bikin game tebak judul lagu pop Indonesia dari potongan melodi 8-bit selama 5 detik! Seru buat mabar tongkrongan.'
+      },
+      {
+        id: 103,
+        name: 'Nadia Aulia',
+        timeAgo: '2 jam yang lalu',
+        dateStr: '23 Nov 2026, 08:05',
+        game_title: 'Sambung Kata Berantai',
+        description: 'Pemain harus nyambung kata dari huruf terakhir kata sebelumnya dengan batas waktu 7 detik per giliran.'
+      },
+      {
+        id: 102,
+        name: 'Reza Pahlevi',
+        timeAgo: '1 hari yang lalu',
+        dateStr: '22 Nov 2026, 19:20',
+        game_title: 'Undercover / Siapa Mata-Matanya?',
+        description: 'Mirip game pesta deduksi sosial, tiap orang dapat kata rahasia lewat QR Code tapi ada 1 orang yang dapat kata berbeda!'
+      }
+    ];
+
+    let pendingDeleteId = null;
+
+    // Tampilkan Flash Alert Neo-Brutalism
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('flashContainer');
+      const bgClass = type === 'error' ? 'bg-rose-100 text-rose-950' : type === 'info' ? 'bg-sunny text-black' : 'bg-emerald-100 text-emerald-950';
+      const emoji = type === 'error' ? '⚠️' : type === 'info' ? '⚡' : '🎉';
+
+      container.className = `sticker-card ${bgClass} border-black p-4 flex items-center justify-between gap-3 font-bold text-sm`;
+      container.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="text-xl">${emoji}</span>
+          <div>${msg}</div>
+        </div>
+        <button onclick="this.parentElement.classList.add('hidden')" class="text-xs font-extrabold underline">Tutup</button>
+      `;
+    }
+
+    // Update Kartu Statistik Atas
+    function updateMetrics() {
+      const keys = Object.keys(gameStatuses);
+      const total = keys.length;
+      const maintCount = keys.filter(k => gameStatuses[k].is_maintenance).length;
+      const activeCount = total - maintCount;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statActive').textContent = activeCount;
+      document.getElementById('statMaint').textContent = maintCount;
+      document.getElementById('statSugg').textContent = suggestions.length;
+      document.getElementById('suggBadge').textContent = `${suggestions.length} Saran`;
+
+      const cardMaint = document.getElementById('cardMaint');
+      cardMaint.className = `sticker-card ${maintCount > 0 ? 'bg-amber-100' : 'bg-white'} p-5 flex flex-col justify-between`;
+    }
+
+    // Render Grid Status Game
+    function renderGames() {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = Object.entries(gameStatuses).map(([key, game]) => {
+        const isMaint = game.is_maintenance;
+        return `
+          <div class="sticker-card p-5 flex flex-col justify-between relative overflow-hidden ${isMaint ? 'bg-amber-50 border-amber-900' : 'bg-white'}">
+            <div class="absolute top-3 right-3">
+              ${isMaint
+                ? `<span class="px-2.5 py-1 rounded-full bg-vermilion text-white border-2 border-black font-extrabold text-[10px] tracking-wide animate-pulse">🔒 MAINTENANCE</span>`
+                : `<span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white border-2 border-black font-extrabold text-[10px] tracking-wide">🟢 BISA DIMAINKAN</span>`
+              }
+            </div>
+
+            <div>
+              <div class="w-12 h-12 rounded-2xl border-2 border-black flex items-center justify-center text-2xl mb-3 shadow-[2px_2px_0_#000] ${isMaint ? 'bg-amber-200' : 'bg-sunny'}">
+                ${game.icon}
+              </div>
+
+              <h3 class="font-comic text-xl text-black leading-tight">
+                ${game.game_name}
+              </h3>
+              <p class="text-[11px] font-mono text-slate-500 mt-0.5">slug: ${key}</p>
+
+              <!-- Pesan Maintenance Saat Ini -->
+              <div class="mt-4 p-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-xs">
+                <p class="font-extrabold text-[10px] text-slate-500 uppercase mb-1">Pesan untuk pemain:</p>
+                <p class="font-doodle text-sm font-bold text-slate-700 italic leading-snug">
+                  "${escapeHtml(game.message)}"
+                </p>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="mt-5 pt-4 border-t border-slate-200 space-y-3">
+              <button type="button" onclick="toggleMaintenance('${key}')" class="w-full sticker-btn ${isMaint ? 'bg-emerald-500' : 'bg-vermilion'} text-white font-extrabold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2">
+                <i data-lucide="${isMaint ? 'unlock' : 'lock'}" class="w-4 h-4"></i>
+                ${isMaint ? 'BUKA KUNCI GAME (AKTIFKAN)' : 'KUNCI GAME (MAINTENANCE)'}
+              </button>
+
+              <details class="text-xs group">
+                <summary class="cursor-pointer font-bold text-cobalt hover:underline flex items-center justify-between select-none">
+                  <span>Ubah Pesan Maintenance</span>
+                  <span class="group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <form onsubmit="saveMaintenanceMessage(event, '${key}')" class="mt-2 space-y-2">
+                  <textarea
+                    id="msg-${key}"
+                    rows="2"
+                    class="w-full p-2 border-2 border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-cobalt"
+                    placeholder="Tulis pesan maintenance..."
+                  >${escapeHtml(game.message)}</textarea>
+                  <button type="submit" class="sticker-btn bg-sunny text-black font-extrabold text-[11px] px-3 py-1.5 rounded-lg w-full">
+                    Simpan Pesan
+                  </button>
+                </form>
+              </details>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateMetrics();
+      lucide.createIcons();
+    }
+
+    // Toggle Status Kunci/Buka Game
+    function toggleMaintenance(key) {
+      const game = gameStatuses[key];
+      if (!game) return;
+      game.is_maintenance = !game.is_maintenance;
+      renderGames();
+      if (game.is_maintenance) {
+        showToast(`Game "${game.game_name}" berhasil DIKUNCI (Mode Maintenance aktif).`, 'info');
+      } else {
+        showToast(`Game "${game.game_name}" telah DIBUKA kembali dan siap dimainkan!`, 'success');
+      }
+    }
+
+    // Simpan Pesan Maintenance
+    function saveMaintenanceMessage(e, key) {
+      e.preventDefault();
+      const textarea = document.getElementById(`msg-${key}`);
+      const newVal = textarea.value.trim();
+      gameStatuses[key].message = newVal || 'maaf ya gamenya lagi di maintanance sama admin, jadi gak bisa dipake dlu';
+      renderGames();
+      showToast(`Pesan maintenance untuk "${gameStatuses[key].game_name}" berhasil diperbarui!`, 'success');
+    }
+
+    // Render Daftar Saran Game dari User
+    function renderSuggestions() {
+      const container = document.getElementById('suggestionsContainer');
+
+      if (suggestions.length === 0) {
+        container.innerHTML = `
+          <div class="sticker-card bg-white p-12 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 border-2 border-black mx-auto flex items-center justify-center text-3xl mb-3 shadow-[2px_2px_0_#000]">
+              📭
+            </div>
+            <h3 class="font-comic text-2xl text-black">BELUM ADA SARAN GAME</h3>
+            <p class="text-sm font-semibold text-slate-500 mt-1">
+              Saat pemain mengirim request game di landing page, semua idenya akan otomatis muncul di sini!
+            </p>
+          </div>
+        `;
+        updateMetrics();
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          ${suggestions.map(item => `
+            <div class="sticker-card bg-white p-5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 pb-3 border-b-2 border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-pastelPink border-2 border-black flex items-center justify-center font-comic text-sm text-black shrink-0">
+                      ${escapeHtml(item.name.charAt(0).toUpperCase())}
+                    </div>
+                    <div>
+                      <p class="font-extrabold text-xs text-black leading-tight">${escapeHtml(item.name)}</p>
+                      <p class="text-[10px] font-semibold text-slate-400">${escapeHtml(item.timeAgo)}</p>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="openDeleteModal(${item.id})" class="sticker-btn bg-white hover:bg-rose-100 text-rose-600 p-1.5 rounded-lg text-xs" title="Hapus saran ini">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
+                <div class="mt-3">
+                  <span class="inline-block px-2 py-0.5 rounded-md bg-sunny border border-black text-[10px] font-extrabold uppercase mb-1">
+                    Ide Game
+                  </span>
+                  <h4 class="font-comic text-lg text-black leading-snug">
+                    ${escapeHtml(item.game_title)}
+                  </h4>
+                </div>
+
+                <div class="mt-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <p class="font-doodle text-base font-bold text-slate-700 leading-relaxed whitespace-pre-line">${escapeHtml(item.description)}</p>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-2 flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                <span>ID: #${item.id}</span>
+                <span>${escapeHtml(item.dateStr)}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      updateMetrics();
+      lucide.createIcons();
+    }
+
+    // Modal Konfirmasi Hapus
+    function openDeleteModal(id) {
+      pendingDeleteId = id;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteId = null;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (pendingDeleteId !== null) {
+        suggestions = suggestions.filter(s => s.id !== pendingDeleteId);
+        renderSuggestions();
+        showToast('Saran game berhasil dihapus dari daftar.', 'success');
+      }
+      closeDeleteModal();
+    });
+
+    // Modal Simulasi Tambah Saran
+    function openAddSuggestionModal() {
+      const modal = document.getElementById('addModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeAddModal() {
+      const modal = document.getElementById('addModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    document.getElementById('addSuggestionForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('inputPlayerName').value.trim();
+      const game_title = document.getElementById('inputGameTitle').value.trim();
+      const description = document.getElementById('inputGameDesc').value.trim();
+
+      const nextId = suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 101;
+      suggestions.unshift({
+        id: nextId,
+        name,
+        timeAgo: 'Baru saja',
+        dateStr: '23 Nov 2026, 10:07',
+        game_title,
+        description
+      });
+
+      e.target.reset();
+      closeAddModal();
+      renderSuggestions();
+      showToast(`Request game baru "${game_title}" dari ${name} berhasil ditambahkan!`, 'success');
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderGames();
+      renderSuggestions();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
