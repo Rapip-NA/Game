@@ -140,7 +140,6 @@
                 <nav class="hidden lg:flex items-center gap-6 text-xs font-extrabold tracking-wider text-ink">
                     <a href="#beranda" class="text-cobalt underline decoration-2 underline-offset-4">BERANDA</a>
                     <a href="#tentang" class="hover:text-cobalt transition-colors">TENTANG</a>
-                    <a href="#kategori" class="hover:text-cobalt transition-colors">KATEGORI</a>
                     <a href="#koleksi" class="hover:text-cobalt transition-colors">KOLEKSI GAME</a>
                     <a href="#saran-game" class="hover:text-cobalt transition-colors">SARAN GAME</a>
                 </nav>
@@ -163,9 +162,8 @@
         <div id="mobileMenu" class="hidden lg:hidden bg-sunny border-t-2 border-ink px-4 py-4 space-y-2">
             <a href="#beranda" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">BERANDA</a>
             <a href="#tentang" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">TENTANG</a>
-            <a href="#kategori" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">KATEGORI</a>
             <a href="#koleksi" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">KOLEKSI GAME</a>
-            <a href="#ulasan" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">ULASAN</a>
+            <a href="#saran-game" class="block py-2 px-3 font-extrabold text-sm rounded-xl hover:bg-white border border-transparent hover:border-ink">SARAN GAME</a>
         </div>
     </header>
 
@@ -337,104 +335,6 @@
                             
                         </div>
                     </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. KATEGORI GAME (4 KARTU WARNA-WARNI BERJEJER) -->
-        <section id="kategori" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-12 gap-8 items-center">
-                
-                <!-- Kolom Judul Kiri "KATEGORI GAME" -->
-                <div class="lg:col-span-3 text-center lg:text-left space-y-3">
-                    <h2 class="font-comic text-4xl sm:text-5xl text-ink leading-none -rotate-2 inline-block">
-                        KATEGORI<br>GAME
-                    </h2>
-                    <!-- Garis Bawah Doodle -->
-                    <svg class="w-36 h-4 mx-auto lg:mx-0" viewBox="0 0 140 14" fill="none">
-                        <path d="M3 10C45 3 95 3 137 9" stroke="#0B44D6" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
-                    <p class="text-sm font-semibold text-slate-600">
-                        Klik salah satu kartu kategori untuk langsung menyaring game favoritmu!
-                    </p>
-                    <!-- Doodle Mahkota -->
-                    <svg class="w-10 h-8 mx-auto lg:mx-0 text-ink" viewBox="0 0 44 32" fill="none">
-                        <path d="M4 26L8 8L18 18L22 6L26 18L36 8L40 26H4Z" fill="#FFD21E" stroke="#111111" stroke-width="2.5" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-
-                <!-- 4 Kartu Kategori Berwarna -->
-                <div class="lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    
-                    <!-- Kartu 1 (Kuning): AKSI & REFLEKS -->
-                    <button onclick="selectCategoryAndScroll('Aksi & Refleks')" class="sticker-card bg-sunny text-ink rounded-3xl p-5 text-left flex flex-col justify-between min-h-[235px] cursor-pointer group">
-                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-ink flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
-                                <polygon points="18,2 5,18 15,18 13,30 27,13 17,13" fill="#FFD21E" stroke="#111111" stroke-width="2.5" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-base tracking-tight uppercase">AKSI & REFLEKS</h3>
-                            <p class="text-xs font-semibold text-ink/85 mt-1.5 leading-relaxed">
-                                Uji kecepatan jari dan ketangkasan matamu dalam tantangan serba cepat.
-                            </p>
-                        </div>
-                        <div class="mt-4 flex justify-end font-black text-lg group-hover:translate-x-1 transition-transform">→</div>
-                    </button>
-
-                    <!-- Kartu 2 (Merah-Oranye): TEKA-TEKI & LOGIKA -->
-                    <button onclick="selectCategoryAndScroll('Teka-Teki & Logika')" class="sticker-card bg-vermilion text-white rounded-3xl p-5 text-left flex flex-col justify-between min-h-[235px] cursor-pointer group">
-                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-ink flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
-                                <path d="M16 4C11 4 7 8 7 13C7 16.5 9 19.2 11.5 21H20.5C23 19.2 25 16.5 25 13C25 8 21 4 16 4Z" fill="#FFD21E" stroke="#111111" stroke-width="2.5"/>
-                                <rect x="12" y="21" width="8" height="5" rx="2" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-base tracking-tight uppercase">TEKA-TEKI & LOGIKA</h3>
-                            <p class="text-xs font-semibold text-white/90 mt-1.5 leading-relaxed">
-                                Asah otak dengan tebakan angka, memori pola, dan puzzle penuh kejutan.
-                            </p>
-                        </div>
-                        <div class="mt-4 flex justify-end font-black text-lg group-hover:translate-x-1 transition-transform">→</div>
-                    </button>
-
-                    <!-- Kartu 3 (Biru Cobalt): ARKADE KLASIK -->
-                    <button onclick="selectCategoryAndScroll('Arkade Klasik')" class="sticker-card bg-cobalt text-white rounded-3xl p-5 text-left flex flex-col justify-between min-h-[235px] cursor-pointer group">
-                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-ink flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
-                                <rect x="4" y="10" width="24" height="14" rx="7" fill="#F9B4C4" stroke="#111111" stroke-width="2.5"/>
-                                <path d="M10 15V19M8 17H12" stroke="#111111" stroke-width="2.2" stroke-linecap="round"/>
-                                <circle cx="21" cy="16" r="1.8" fill="#111111"/>
-                                <circle cx="24" cy="18" r="1.8" fill="#111111"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-base tracking-tight uppercase">ARKADE KLASIK</h3>
-                            <p class="text-xs font-semibold text-blue-100 mt-1.5 leading-relaxed">
-                                Nostalgia mesin dingdong retro dengan kontrol simpel yang bikin ketagihan.
-                            </p>
-                        </div>
-                        <div class="mt-4 flex justify-end font-black text-lg group-hover:translate-x-1 transition-transform">→</div>
-                    </button>
-
-                    <!-- Kartu 4 (Kuning): BALAPAN & SKOR -->
-                    <button onclick="selectCategoryAndScroll('Balapan & Skor')" class="sticker-card bg-sunny text-ink rounded-3xl p-5 text-left flex flex-col justify-between min-h-[235px] cursor-pointer group">
-                        <div class="w-14 h-14 rounded-2xl bg-white border-2 border-ink flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none">
-                                <path d="M9 6H23V13C23 16.9 19.9 20 16 20C12.1 20 9 16.9 9 13V6Z" fill="#EB3B24" stroke="#111111" stroke-width="2.5"/>
-                                <path d="M16 20V25M11 26H21" stroke="#111111" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-base tracking-tight uppercase">BALAPAN & SKOR</h3>
-                            <p class="text-xs font-semibold text-ink/85 mt-1.5 leading-relaxed">
-                                Kebut waktu dan kumpulkan poin maksimal untuk memecahkan rekor tertinggi!
-                            </p>
-                        </div>
-                        <div class="mt-4 flex justify-end font-black text-lg group-hover:translate-x-1 transition-transform">→</div>
-                    </button>
 
                 </div>
             </div>
@@ -760,7 +660,6 @@
                     <ul class="space-y-2 text-blue-50">
                         <li><a href="#beranda" class="hover:text-sunny transition-colors">Beranda</a></li>
                         <li><a href="#tentang" class="hover:text-sunny transition-colors">Tentang Kami</a></li>
-                        <li><a href="#kategori" class="hover:text-sunny transition-colors">Kategori</a></li>
                         <li><a href="#koleksi" class="hover:text-sunny transition-colors">Koleksi Game</a></li>
                         <li><a href="#saran-game" class="hover:text-sunny transition-colors">Saran Game</a></li>
                         <li><a href="{{ route('login') }}" class="hover:text-sunny text-amber-300 transition-colors">Login Admin 🔐</a></li>
