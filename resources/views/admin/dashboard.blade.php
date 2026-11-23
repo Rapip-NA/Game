@@ -18,8 +18,9 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide Icons -->
+  <!-- Lucide Icons & SweetAlert2 -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
     tailwind.config = {
@@ -94,6 +95,71 @@
     .rich-content blockquote { border-left: 3px solid var(--line); padding-left: 0.5rem; margin: 0.25rem 0; font-style: italic; color: #475569; }
     .rich-content b, .rich-content strong { font-weight: 800; }
     .rich-content h2, .rich-content h3 { font-weight: 800; margin: 0.35rem 0 0.15rem; font-size: 1rem; }
+
+    /* SweetAlert2 Neo-Brutalism Customization */
+    div:where(.swal2-container) .swal2-popup.mainyuk-swal {
+      border: 3.5px solid #111111 !important;
+      border-radius: 24px !important;
+      box-shadow: 6px 6px 0px #111111 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background: #FFFFFF !important;
+      color: #111111 !important;
+      padding: 22px !important;
+    }
+    div:where(.swal2-container) .swal2-title.mainyuk-swal-title {
+      font-family: 'Luckiest Guy', cursive !important;
+      letter-spacing: 0.04em !important;
+      color: #111111 !important;
+      font-size: 1.55rem !important;
+    }
+    div:where(.swal2-container) .swal2-html-container {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 700 !important;
+      color: #334155 !important;
+      font-size: 0.95rem !important;
+    }
+    div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm {
+      background-color: #FFD21E !important;
+      color: #111111 !important;
+      border: 3px solid #111111 !important;
+      border-radius: 14px !important;
+      box-shadow: 3.5px 3.5px 0px #111111 !important;
+      font-weight: 900 !important;
+      font-family: 'Luckiest Guy', cursive !important;
+      font-size: 1.05rem !important;
+      padding: 10px 24px !important;
+      letter-spacing: 0.03em !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+    div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm-danger {
+      background-color: #EB3B24 !important;
+      color: #FFFFFF !important;
+      border: 3px solid #111111 !important;
+      border-radius: 14px !important;
+      box-shadow: 3.5px 3.5px 0px #111111 !important;
+      font-weight: 900 !important;
+      font-family: 'Luckiest Guy', cursive !important;
+      font-size: 1.05rem !important;
+      padding: 10px 24px !important;
+      letter-spacing: 0.03em !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+    div:where(.swal2-container) .swal2-cancel.mainyuk-swal-cancel {
+      background-color: #FFFFFF !important;
+      color: #111111 !important;
+      border: 3px solid #111111 !important;
+      border-radius: 14px !important;
+      box-shadow: 3.5px 3.5px 0px #111111 !important;
+      font-weight: 900 !important;
+      font-family: 'Luckiest Guy', cursive !important;
+      font-size: 1.05rem !important;
+      padding: 10px 20px !important;
+      letter-spacing: 0.03em !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
   </style>
 </head>
 <body class="pb-24">
@@ -234,27 +300,6 @@
 
   </main>
 
-  <!-- MODAL KONFIRMASI HAPUS SARAN -->
-  <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-    <div class="sticker-card bg-white max-w-md w-full p-6 text-center space-y-4">
-      <div class="w-14 h-14 rounded-2xl bg-rose-100 border-2 border-black mx-auto flex items-center justify-center text-3xl shadow-[3px_3px_0_#000]">
-        🗑️
-      </div>
-      <h3 class="font-comic text-2xl text-black">HAPUS SARAN GAME INI?</h3>
-      <p class="text-sm font-semibold text-slate-600">
-        Saran game dari pemain ini akan dihapus dari daftar antrean request.
-      </p>
-      <div class="flex justify-center gap-3 pt-2">
-        <button onclick="closeDeleteModal()" class="sticker-btn bg-white text-black font-extrabold text-xs px-5 py-2.5 rounded-xl">
-          BATAL
-        </button>
-        <button id="confirmDeleteBtn" class="sticker-btn bg-vermilion text-white font-extrabold text-xs px-5 py-2.5 rounded-xl">
-          YA, HAPUS!
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL TAMBAH SARAN BARU -->
   <div id="addModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
     <div class="sticker-card bg-white max-w-md w-full p-6 space-y-4">
@@ -345,22 +390,29 @@
       return `${day} ${month} ${year}, ${hours}:${mins}`;
     }
 
-    // Tampilkan Flash Alert Neo-Brutalism
-    function showToast(msg, type = 'success') {
-      const container = document.getElementById('flashContainer');
-      const bgClass = type === 'error' ? 'bg-rose-100 text-rose-950' : type === 'info' ? 'bg-amber-100 text-amber-950' : 'bg-emerald-100 text-emerald-950';
-      const emoji = type === 'error' ? '⚠️' : type === 'info' ? '⚡' : '🎉';
+    // SweetAlert2 Toast Instance
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      customClass: {
+        popup: 'mainyuk-swal'
+      },
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
 
-      container.className = 'block';
-      container.innerHTML = `
-        <div class="sticker-card ${bgClass} border-black p-4 flex items-center justify-between gap-3 font-bold text-sm mb-6">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">${emoji}</span>
-            <div>${escapeHtml(msg)}</div>
-          </div>
-          <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="text-xs font-extrabold underline">Tutup</button>
-        </div>
-      `;
+    // Tampilkan Notifikasi dengan SweetAlert2
+    function showToast(msg, type = 'success') {
+      const swalType = type === 'info' ? 'info' : (type === 'error' ? 'error' : 'success');
+      Toast.fire({
+        icon: swalType,
+        title: msg
+      });
     }
 
     // Update Kartu Statistik Atas
@@ -605,49 +657,49 @@
       lucide.createIcons();
     }
 
-    // Modal Konfirmasi Hapus
+    // Konfirmasi Hapus Saran Game dengan SweetAlert2
     function openDeleteModal(id) {
-      pendingDeleteId = id;
-      const modal = document.getElementById('deleteModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
+      Swal.fire({
+        customClass: {
+          popup: 'mainyuk-swal',
+          title: 'mainyuk-swal-title',
+          confirmButton: 'mainyuk-swal-confirm-danger',
+          cancelButton: 'mainyuk-swal-cancel'
+        },
+        title: 'HAPUS SARAN INI? 🗑️',
+        text: 'Saran game dari pemain ini akan dihapus dari antrean request.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'YA, HAPUS!',
+        cancelButtonText: 'BATAL',
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch(`/admin/suggestions/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            });
+            const res = await response.json();
 
-    function closeDeleteModal() {
-      pendingDeleteId = null;
-      const modal = document.getElementById('deleteModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-      if (pendingDeleteId !== null) {
-        const idToDelete = pendingDeleteId;
-        closeDeleteModal();
-
-        try {
-          const response = await fetch(`/admin/suggestions/${idToDelete}`, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': csrfToken,
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest'
+            if (response.ok && res.status === 'success') {
+              suggestions = suggestions.filter(s => s.id !== id);
+              renderSuggestions();
+              showToast('Saran game berhasil dihapus dari daftar.', 'success');
+            } else {
+              showToast(res.message || 'Gagal menghapus saran game.', 'error');
             }
-          });
-          const result = await response.json();
-
-          if (response.ok && result.status === 'success') {
-            suggestions = suggestions.filter(s => s.id !== idToDelete);
-            renderSuggestions();
-            showToast('Saran game berhasil dihapus dari daftar.', 'success');
-          } else {
-            showToast(result.message || 'Gagal menghapus saran game.', 'error');
+          } catch (err) {
+            showToast('Terjadi kesalahan saat menghapus saran.', 'error');
           }
-        } catch (err) {
-          showToast('Terjadi kesalahan saat menghapus saran.', 'error');
         }
-      }
-    });
+      });
+    }
 
     // Modal Tambah Saran
     function openAddSuggestionModal() {
@@ -727,6 +779,12 @@
       renderGames();
       renderSuggestions();
       lucide.createIcons();
+
+      @if (session('success'))
+        showToast(@json(session('success')), 'success');
+      @elseif (session('error'))
+        showToast(@json(session('error')), 'error');
+      @endif
     });
   </script>
 </body>

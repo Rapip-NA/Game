@@ -17,8 +17,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons & SweetAlert2 -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -85,6 +86,47 @@
         .sticker-btn:active {
             transform: translate(2px, 2px);
             box-shadow: 0px 0px 0px #111111;
+        }
+
+        /* SweetAlert2 Neo-Brutalism Customization */
+        div:where(.swal2-container) .swal2-popup.mainyuk-swal {
+            border: 3.5px solid #111111 !important;
+            border-radius: 28px !important;
+            box-shadow: 6px 6px 0px #111111 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            background: #FFFDF9 !important;
+            color: #111111 !important;
+            padding: 24px !important;
+        }
+        div:where(.swal2-container) .swal2-title.mainyuk-swal-title {
+            font-family: 'Luckiest Guy', cursive !important;
+            letter-spacing: 0.04em !important;
+            color: #111111 !important;
+            font-size: 1.6rem !important;
+        }
+        div:where(.swal2-container) .swal2-html-container {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-weight: 700 !important;
+            color: #334155 !important;
+            font-size: 0.95rem !important;
+        }
+        div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm {
+            background-color: #FFD21E !important;
+            color: #111111 !important;
+            border: 3px solid #111111 !important;
+            border-radius: 16px !important;
+            box-shadow: 3.5px 3.5px 0px #111111 !important;
+            font-weight: 900 !important;
+            font-family: 'Luckiest Guy', cursive !important;
+            font-size: 1.05rem !important;
+            padding: 12px 28px !important;
+            letter-spacing: 0.03em !important;
+            cursor: pointer !important;
+            transition: all 0.15s ease !important;
+        }
+        div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm:hover {
+            transform: translate(-2px, -2px) !important;
+            box-shadow: 5px 5px 0px #111111 !important;
         }
 
         /* Latar Kertas Bergaris Notepad */
@@ -431,9 +473,6 @@
                             <span>KASIH SARAN GAME</span>
                             <span class="text-2xl">✨</span>
                         </a>
-                        <span class="text-xs sm:text-sm font-extrabold text-white/90 bg-ink/30 px-3.5 py-2 rounded-xl border border-white/20">
-                            Tanpa perlu login • Bebas tulis konsep & upload gambar
-                        </span>
                     </div>
                 </div>
             </div>
@@ -716,6 +755,34 @@
         window.addEventListener("DOMContentLoaded", () => {
             renderGames();
             lucide.createIcons();
+
+            @if (session('success'))
+                Swal.fire({
+                    customClass: {
+                        popup: 'mainyuk-swal',
+                        title: 'mainyuk-swal-title',
+                        confirmButton: 'mainyuk-swal-confirm'
+                    },
+                    title: 'BERHASIL! 🎉',
+                    text: @json(session('success')),
+                    icon: 'success',
+                    confirmButtonText: 'OKE',
+                    buttonsStyling: false
+                });
+            @elseif (session('error'))
+                Swal.fire({
+                    customClass: {
+                        popup: 'mainyuk-swal',
+                        title: 'mainyuk-swal-title',
+                        confirmButton: 'mainyuk-swal-confirm'
+                    },
+                    title: 'PERHATIAN! ⚠️',
+                    text: @json(session('error')),
+                    icon: 'warning',
+                    confirmButtonText: 'OKE',
+                    buttonsStyling: false
+                });
+            @endif
         });
     </script>
 </body>

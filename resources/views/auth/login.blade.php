@@ -15,8 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons -->
+  <!-- Lucide Icons & SweetAlert2 -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -177,6 +178,57 @@
       color: #991B1B;
     }
 
+    /* SweetAlert2 Neo-Brutalism Customization */
+    div:where(.swal2-container) .swal2-popup.mainyuk-swal {
+      border: 3.5px solid #111111 !important;
+      border-radius: 24px !important;
+      box-shadow: 6px 6px 0px #111111 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      background: #FFFFFF !important;
+      color: #111111 !important;
+      padding: 24px !important;
+    }
+    div:where(.swal2-container) .swal2-title.mainyuk-swal-title {
+      font-family: 'Luckiest Guy', cursive !important;
+      letter-spacing: 0.04em !important;
+      color: #111111 !important;
+      font-size: 1.6rem !important;
+    }
+    div:where(.swal2-container) .swal2-html-container {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-weight: 700 !important;
+      color: #334155 !important;
+      font-size: 0.95rem !important;
+    }
+    div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm {
+      background-color: #FFD21E !important;
+      color: #111111 !important;
+      border: 3px solid #111111 !important;
+      border-radius: 14px !important;
+      box-shadow: 3.5px 3.5px 0px #111111 !important;
+      font-weight: 900 !important;
+      font-family: 'Luckiest Guy', cursive !important;
+      font-size: 1.05rem !important;
+      padding: 10px 24px !important;
+      letter-spacing: 0.03em !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+    div:where(.swal2-container) .swal2-confirm.mainyuk-swal-confirm-danger {
+      background-color: #EB3B24 !important;
+      color: #FFFFFF !important;
+      border: 3px solid #111111 !important;
+      border-radius: 14px !important;
+      box-shadow: 3.5px 3.5px 0px #111111 !important;
+      font-weight: 900 !important;
+      font-family: 'Luckiest Guy', cursive !important;
+      font-size: 1.05rem !important;
+      padding: 10px 24px !important;
+      letter-spacing: 0.03em !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
     .alert-success {
       background: #DCFCE7;
       color: #166534;
@@ -291,6 +343,47 @@
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+
+      @if ($errors->has('credentials'))
+        Swal.fire({
+          customClass: {
+            popup: 'mainyuk-swal',
+            title: 'mainyuk-swal-title',
+            confirmButton: 'mainyuk-swal-confirm-danger'
+          },
+          title: 'LOGIN GAGAL! ❌',
+          text: @json($errors->first('credentials')),
+          icon: 'error',
+          confirmButtonText: 'COBA LAGI',
+          buttonsStyling: false
+        });
+      @elseif (session('error'))
+        Swal.fire({
+          customClass: {
+            popup: 'mainyuk-swal',
+            title: 'mainyuk-swal-title',
+            confirmButton: 'mainyuk-swal-confirm-danger'
+          },
+          title: 'PERHATIAN! ⚠️',
+          text: @json(session('error')),
+          icon: 'warning',
+          confirmButtonText: 'OKE',
+          buttonsStyling: false
+        });
+      @elseif (session('success'))
+        Swal.fire({
+          customClass: {
+            popup: 'mainyuk-swal',
+            title: 'mainyuk-swal-title',
+            confirmButton: 'mainyuk-swal-confirm'
+          },
+          title: 'BERHASIL! ✅',
+          text: @json(session('success')),
+          icon: 'success',
+          confirmButtonText: 'OKE',
+          buttonsStyling: false
+        });
+      @endif
     });
   </script>
 </body>
