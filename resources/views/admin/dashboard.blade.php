@@ -88,6 +88,12 @@
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0px var(--line);
     }
+
+    .rich-content ul { list-style-type: disc; padding-left: 1.25rem; margin: 0.25rem 0; }
+    .rich-content ol { list-style-type: decimal; padding-left: 1.25rem; margin: 0.25rem 0; }
+    .rich-content blockquote { border-left: 3px solid var(--line); padding-left: 0.5rem; margin: 0.25rem 0; font-style: italic; color: #475569; }
+    .rich-content b, .rich-content strong { font-weight: 800; }
+    .rich-content h2, .rich-content h3 { font-weight: 800; margin: 0.35rem 0 0.15rem; font-size: 1rem; }
   </style>
 </head>
 <body class="pb-24">
@@ -306,11 +312,12 @@
     const rawSuggestions = @json($suggestions);
     let suggestions = rawSuggestions.map(item => ({
       id: item.id,
-      name: item.name,
+      name: item.name || 'Anonim',
       timeAgo: formatTimeAgo(new Date(item.created_at)),
       dateStr: formatDate(new Date(item.created_at)),
-      game_title: item.game_title,
-      description: item.description
+      game_title: item.game_title || 'Ide Game Tanpa Judul',
+      description: item.description,
+      image_path: item.image_path || null
     }));
 
     let pendingDeleteId = null;
@@ -509,6 +516,16 @@
       }
     }
 
+    // Sanitasi dan format HTML deskripsi saran game
+    function formatDescription(html) {
+      if (!html) return '';
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      const dangerous = div.querySelectorAll('script, iframe, style, object, embed, link');
+      dangerous.forEach(el => el.remove());
+      return div.innerHTML;
+    }
+
     // Render Daftar Saran Game dari User
     function renderSuggestions() {
       const container = document.getElementById('suggestionsContainer');
@@ -521,7 +538,7 @@
             </div>
             <h3 class="font-comic text-2xl text-black">BELUM ADA SARAN GAME</h3>
             <p class="text-sm font-semibold text-slate-500 mt-1">
-              Saat pemain mengirim request game di landing page, semua idenya akan otomatis muncul di sini!
+              Saat pemain mengirim request game di formulir Saran Game, semua idenya akan otomatis muncul di sini!
             </p>
           </div>
         `;
@@ -537,10 +554,10 @@
                 <div class="flex items-center justify-between gap-2 pb-3 border-b-2 border-slate-100">
                   <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-full bg-pastelPink border-2 border-black flex items-center justify-center font-comic text-sm text-black shrink-0">
-                      ${escapeHtml(item.name.charAt(0).toUpperCase())}
+                      ${escapeHtml((item.name || 'A').charAt(0).toUpperCase())}
                     </div>
                     <div>
-                      <p class="font-extrabold text-xs text-black leading-tight">${escapeHtml(item.name)}</p>
+                      <p class="font-extrabold text-xs text-black leading-tight">${escapeHtml(item.name || 'Anonim')}</p>
                       <p class="text-[10px] font-semibold text-slate-400">${escapeHtml(item.timeAgo)}</p>
                     </div>
                   </div>
@@ -555,13 +572,24 @@
                     Ide Game
                   </span>
                   <h4 class="font-comic text-lg text-black leading-snug">
-                    ${escapeHtml(item.game_title)}
+                    ${escapeHtml(item.game_title || 'Ide Game Tanpa Judul')}
                   </h4>
                 </div>
 
-                <div class="mt-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <p class="font-doodle text-base font-bold text-slate-700 leading-relaxed whitespace-pre-line">${escapeHtml(item.description)}</p>
+                <div class="mt-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 rich-content text-sm font-semibold text-slate-800 leading-relaxed max-h-56 overflow-y-auto">
+                  ${formatDescription(item.description)}
                 </div>
+
+                ${item.image_path ? `
+                  <div class="mt-3">
+                    <a href="/${escapeHtml(item.image_path)}" target="_blank" rel="noopener noreferrer" class="block group relative overflow-hidden rounded-xl border-2 border-black bg-slate-100">
+                      <img src="/${escapeHtml(item.image_path)}" alt="Lampiran Saran" class="w-full h-36 object-cover group-hover:scale-105 transition duration-200">
+                      <div class="absolute bottom-1.5 right-1.5 bg-black/80 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-1 shadow">
+                        <span>🔍</span> Lihat Gambar
+                      </div>
+                    </a>
+                  </div>
+                ` : ''}
               </div>
 
               <div class="mt-4 pt-2 flex items-center justify-between text-[11px] font-semibold text-slate-400">
@@ -665,11 +693,12 @@
           const newItem = result.data;
           suggestions.unshift({
             id: newItem.id,
-            name: newItem.name,
+            name: newItem.name || 'Anonim',
             timeAgo: 'Baru saja',
             dateStr: formatDate(new Date(newItem.created_at || Date.now())),
-            game_title: newItem.game_title,
-            description: newItem.description
+            game_title: newItem.game_title || 'Ide Game Tanpa Judul',
+            description: newItem.description,
+            image_path: newItem.image_path || null
           });
 
           e.target.reset();

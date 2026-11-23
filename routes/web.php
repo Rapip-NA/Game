@@ -8,26 +8,24 @@ use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\SuperPasswordController;
 use App\Http\Controllers\SusunUrutanController;
 use App\Models\GameMaintenance;
-use App\Models\GameSuggestion;
 use Illuminate\Support\Facades\Route;
 
 // Home / Landing Page
 Route::get('/', function () {
     try {
         $gameStatuses = GameMaintenance::getStatuses();
-        $recentSuggestions = GameSuggestion::latest()->take(6)->get();
     } catch (Throwable) {
         $gameStatuses = [];
-        $recentSuggestions = collect();
     }
 
     return view('welcome', [
         'gameStatuses' => $gameStatuses,
-        'recentSuggestions' => $recentSuggestions,
     ]);
 })->name('home');
 
-// Submit Game Suggestion from Users
+// Game Suggestion Routes
+Route::get('/saran', [GameSuggestionController::class, 'create'])->name('game-suggestions.create');
+Route::get('/saran-game', fn () => redirect()->route('game-suggestions.create'));
 Route::post('/game-suggestions', [GameSuggestionController::class, 'store'])->name('game-suggestions.store');
 
 // Admin Authentication

@@ -399,182 +399,42 @@
             </div>
         </section>
 
-        <!-- 6. SARAN GAME (REQUEST USER) -->
+        <!-- 6. KOTAK KASIH SARAN GAME (CTA KE HALAMAN SARAN) -->
         <section id="saran-game" class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-vermilion border-[3px] border-ink rounded-[36px] p-6 sm:p-10 shadow-[8px_8px_0px_#111111]">
-                <div class="grid lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Kiri: Judul SARAN GAME & Form Request Ide Game -->
-                    <div class="lg:col-span-5 space-y-4 text-white">
-                        <div class="text-center lg:text-left space-y-2">
-                            <span class="px-3 py-1 rounded-full bg-sunny text-ink border-2 border-ink text-xs font-black uppercase inline-block">
-                                💡 IDE PEMAIN
-                            </span>
-                            <h2 class="font-comic text-4xl sm:text-5xl text-white leading-none -rotate-1 block">
-                                SARAN<br>GAME
-                            </h2>
-                            <!-- Garis Zig-Zag Kuning -->
-                            <svg class="w-36 h-6 mx-auto lg:mx-0" viewBox="0 0 140 24" fill="none">
-                                <path d="M4 16L24 6L44 18L64 6L84 18L104 6L124 18L136 10" stroke="#FFD21E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <p class="text-xs sm:text-sm font-bold text-white/95 leading-relaxed">
-                                Mau game seperti apa lagi di MainYuk? Tulis idemu di bawah, request game favoritmu akan kami baca dan wujudkan!
-                            </p>
-                        </div>
+            <div class="bg-vermilion border-[3.5px] border-ink rounded-[36px] p-8 sm:p-12 shadow-[8px_8px_0px_#111111] relative overflow-hidden text-white">
+                
+                <!-- Ornamen Kartun Background -->
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-sunny rounded-full border-4 border-ink pointer-events-none opacity-40"></div>
+                <div class="absolute top-4 right-12 hidden sm:block animate-bounce" style="animation-duration: 3.5s;">
+                    <span class="text-5xl">💡</span>
+                </div>
 
-                        <!-- Notifikasi Sukses / Error Form -->
-                        @if (session('suggestion_success'))
-                            <div class="bg-sunny border-2 border-ink text-ink p-3.5 rounded-2xl font-bold text-xs shadow-[3px_3px_0px_#111]">
-                                {{ session('suggestion_success') }}
-                            </div>
-                        @endif
+                <div class="max-w-3xl relative z-10 space-y-5 text-center sm:text-left">
+                    <span class="px-3.5 py-1 rounded-full bg-sunny text-ink border-2 border-ink text-xs font-black uppercase inline-flex items-center gap-1.5 shadow-[2px_2px_0_#111]">
+                        <span>🚀</span> KOTAK SARAN & IDE GAME
+                    </span>
 
-                        <div id="suggestionAlert" class="hidden p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111]"></div>
+                    <h2 class="font-comic text-4xl sm:text-5xl lg:text-6xl text-white leading-tight drop-shadow-[2px_2px_0_#111]">
+                        PUNYA IDE GAME SERU?<br>
+                        <span class="text-sunny underline decoration-ink decoration-wavy decoration-2">KASIH TAHU KAMI!</span>
+                    </h2>
 
-                        <!-- Form Input Saran Game -->
-                        <form id="suggestionForm" action="{{ route('game-suggestions.store') }}" method="POST" class="bg-white border-[3px] border-ink rounded-3xl p-5 sm:p-6 text-ink shadow-[5px_5px_0px_#111] space-y-3">
-                            @csrf
-                            <div>
-                                <label for="sug_name" class="block text-xs font-extrabold uppercase text-ink mb-1">
-                                    👤 NAMA / PANGGILAN
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="name" 
-                                    id="sug_name" 
-                                    required 
-                                    placeholder="Contoh: Budi / Tim Kelas 12" 
-                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
-                                >
-                            </div>
+                    <p class="text-base sm:text-lg font-bold text-white/95 max-w-2xl leading-relaxed">
+                        Mau game seperti apa lagi yang ingin kamu mainkan bareng teman atau kelas di MainYuk? Klik tombol di bawah untuk kirimkan konsep game impianmu secara gratis dan tanpa ribet!
+                    </p>
 
-                            <div>
-                                <label for="sug_title" class="block text-xs font-extrabold uppercase text-ink mb-1">
-                                    🎮 IDE / NAMA GAME YANG DIINGINKAN
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="game_title" 
-                                    id="sug_title" 
-                                    required 
-                                    placeholder="Contoh: Game Tebak Lagu 90an" 
-                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
-                                >
-                            </div>
-
-                            <div>
-                                <label for="sug_desc" class="block text-xs font-extrabold uppercase text-ink mb-1">
-                                    📝 KONSEP / CARA MAINNYA
-                                </label>
-                                <textarea 
-                                    name="description" 
-                                    id="sug_desc" 
-                                    rows="3" 
-                                    required 
-                                    placeholder="Ceritakan singkat cara mainnya atau aturannya..." 
-                                    class="w-full bg-slate-50 border-2 border-ink rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:ring-2 focus:ring-cobalt"
-                                ></textarea>
-                            </div>
-
-                            <button 
-                                type="submit" 
-                                id="btnSubmitSuggestion" 
-                                class="w-full sticker-btn bg-sunny hover:bg-yellow-400 text-ink font-comic text-base sm:text-lg py-2.5 rounded-xl tracking-wide flex items-center justify-center gap-2"
-                            >
-                                <span>KIRIM SARAN GAME</span>
-                                <span class="font-sans font-black">🚀</span>
-                            </button>
-                        </form>
+                    <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-4">
+                        <a 
+                            href="{{ route('game-suggestions.create') }}" 
+                            class="sticker-btn bg-sunny hover:bg-yellow-400 text-ink font-comic text-lg sm:text-2xl px-8 py-4 rounded-2xl inline-flex items-center gap-3 tracking-wide"
+                        >
+                            <span>KASIH SARAN GAME</span>
+                            <span class="text-2xl">✨</span>
+                        </a>
+                        <span class="text-xs sm:text-sm font-extrabold text-white/90 bg-ink/30 px-3.5 py-2 rounded-xl border border-white/20">
+                            Tanpa perlu login • Bebas tulis konsep & upload gambar
+                        </span>
                     </div>
-
-                    <!-- Kanan: Daftar Saran Game yang Masuk dari Komunitas -->
-                    <div class="lg:col-span-7 space-y-4">
-                        <div class="flex items-center justify-between text-white border-b-2 border-white/30 pb-2">
-                            <h3 class="font-comic text-xl sm:text-2xl tracking-wide text-white flex items-center gap-2">
-                                <span>📬</span> REQUEST DARI PEMAIN
-                            </h3>
-                            <span class="text-xs font-bold text-white/90">Terbaru</span>
-                        </div>
-
-                        <div id="recentSuggestionsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            @if(isset($recentSuggestions) && $recentSuggestions->isNotEmpty())
-                                @foreach($recentSuggestions as $sug)
-                                    <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                                        <div>
-                                            <div class="flex items-center justify-between gap-2 mb-2">
-                                                <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink truncate max-w-[150px]">
-                                                    {{ $sug->game_title }}
-                                                </span>
-                                                <span class="text-[10px] font-bold text-slate-400 shrink-0">
-                                                    {{ $sug->created_at->diffForHumans() }}
-                                                </span>
-                                            </div>
-                                            <p class="font-doodle text-base font-bold text-ink leading-relaxed">
-                                                “{{ $sug->description }}”
-                                            </p>
-                                        </div>
-                                        <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
-                                            <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
-                                                {{ strtoupper(substr($sug->name, 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <p class="font-extrabold text-xs text-ink leading-tight">{{ $sug->name }}</p>
-                                                <p class="text-[10px] font-semibold text-slate-500">Pemain MainYuk</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <!-- Kartu Contoh jika belum ada saran di DB -->
-                                <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                                    <div>
-                                        <div class="flex items-center justify-between gap-2 mb-2">
-                                            <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink">
-                                                Tebak Suara Hewan
-                                            </span>
-                                            <span class="text-[10px] font-bold text-slate-400">Baru</span>
-                                        </div>
-                                        <p class="font-doodle text-base font-bold text-ink leading-relaxed">
-                                            “Seru kalau ada game tebak efek suara aneh atau suara hewan yang cepat-cepatan pencet bel di HP!”
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
-                                        <div class="w-7 h-7 rounded-full bg-sunny border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
-                                            D
-                                        </div>
-                                        <div>
-                                            <p class="font-extrabold text-xs text-ink leading-tight">Dimas R.</p>
-                                            <p class="text-[10px] font-semibold text-slate-500">Mahasiswa</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between">
-                                    <div>
-                                        <div class="flex items-center justify-between gap-2 mb-2">
-                                            <span class="px-2 py-0.5 rounded-full bg-pastelPink border border-ink text-[10px] font-extrabold uppercase text-ink">
-                                                Sambung Pantun
-                                            </span>
-                                            <span class="text-[10px] font-bold text-slate-400">Baru</span>
-                                        </div>
-                                        <p class="font-doodle text-base font-bold text-ink leading-relaxed">
-                                            “Bikin game sambung pantun lucu 2 tim secara acak, tiap tim dapat kata rima acak!”
-                                        </p>
-                                    </div>
-                                    <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
-                                        <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
-                                            N
-                                        </div>
-                                        <div>
-                                            <p class="font-extrabold text-xs text-ink leading-tight">Nadia A.</p>
-                                            <p class="text-[10px] font-semibold text-slate-500">Illustrator</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -850,86 +710,6 @@
             if (rand && rand.url) {
                 window.location.href = rand.url;
             }
-        }
-
-        // Form Saran Game Handler (AJAX)
-        const sugForm = document.getElementById("suggestionForm");
-        if (sugForm) {
-            sugForm.addEventListener("submit", async function(e) {
-                e.preventDefault();
-                const btn = document.getElementById("btnSubmitSuggestion");
-                const alertBox = document.getElementById("suggestionAlert");
-                const originalText = btn.innerHTML;
-                
-                btn.disabled = true;
-                btn.innerHTML = `<span>MENGIRIMKAN...</span> <span class="animate-spin">⏳</span>`;
-                alertBox.className = "hidden";
-
-                const formData = new FormData(sugForm);
-
-                try {
-                    const response = await fetch("{{ route('game-suggestions.store') }}", {
-                        method: "POST",
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "Accept": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || formData.get('_token')
-                        },
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.status === 'success') {
-                        alertBox.className = "p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111] bg-sunny text-ink";
-                        alertBox.innerHTML = `🎉 ${result.message}`;
-                        sugForm.reset();
-
-                        // Tambahkan kartu ide baru ke daftar
-                        const list = document.getElementById("recentSuggestionsList");
-                        if (list && result.data) {
-                            const newCard = document.createElement("div");
-                            newCard.className = "bg-white border-[3px] border-ink rounded-2xl p-4 shadow-[4px_4px_0px_#111111] flex flex-col justify-between animate-fadeIn";
-                            newCard.innerHTML = `
-                                <div>
-                                    <div class="flex items-center justify-between gap-2 mb-2">
-                                        <span class="px-2 py-0.5 rounded-full bg-sunny border border-ink text-[10px] font-extrabold uppercase text-ink truncate max-w-[150px]">
-                                            ${result.data.game_title}
-                                        </span>
-                                        <span class="text-[10px] font-bold text-slate-400 shrink-0">
-                                            Baru saja
-                                        </span>
-                                    </div>
-                                    <p class="font-doodle text-base font-bold text-ink leading-relaxed">
-                                        “${result.data.description}”
-                                    </p>
-                                </div>
-                                <div class="flex items-center gap-2.5 mt-3 pt-2.5 border-t-2 border-slate-100">
-                                    <div class="w-7 h-7 rounded-full bg-pastelPink border-2 border-ink flex items-center justify-center font-comic text-xs text-ink shrink-0">
-                                        ${result.data.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div>
-                                        <p class="font-extrabold text-xs text-ink leading-tight">${result.data.name}</p>
-                                        <p class="text-[10px] font-semibold text-slate-500">Pemain MainYuk</p>
-                                    </div>
-                                </div>
-                            `;
-                            list.prepend(newCard);
-                        }
-                    } else {
-                        const errMsg = result.message || (result.errors ? Object.values(result.errors).flat().join('<br>') : 'Gagal mengirim saran. Cek isianmu.');
-                        alertBox.className = "p-3.5 rounded-2xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0px_#111] bg-rose-100 text-rose-800";
-                        alertBox.innerHTML = `⚠️ ${errMsg}`;
-                    }
-                } catch (err) {
-                    // Fallback to standard form submit jika fetch gagal
-                    sugForm.submit();
-                    return;
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                }
-            });
         }
 
         // Inisialisasi Awal

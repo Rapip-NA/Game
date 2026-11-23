@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\GameMaintenance;
 use App\Models\GameSuggestion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminFeatureTest extends TestCase
@@ -74,19 +76,56 @@ class AdminFeatureTest extends TestCase
         $this->assertFalse(session()->get('is_admin', false));
     }
 
-    public function test_user_can_submit_game_suggestion(): void
+    public function test_suggestion_page_can_be_rendered(): void
+    {
+        $response = $this->get('/saran');
+        $response->assertStatus(200);
+        $response->assertSee('KASIH SARAN');
+
+        $aliasResponse = $this->get('/saran-game');
+        $aliasResponse->assertRedirect('/saran');
+    }
+
+    public function test_user_can_submit_game_suggestion_without_name_and_optional_title(): void
     {
         $response = $this->post('/game-suggestions', [
-            'name' => 'Budi Santoso',
             'game_title' => 'Tebak Gambar Emoji',
-            'description' => 'Menebak judul film dari susunan 3 emoji secara cepat',
+            'description' => '<b>Cara main:</b> Menebak judul film dari <i>3 emoji</i> secara cepat.',
         ]);
 
+        $response->assertRedirect('/saran');
         $response->assertSessionHas('suggestion_success');
         $this->assertDatabaseHas('game_suggestions', [
-            'name' => 'Budi Santoso',
+            'name' => 'Anonim',
             'game_title' => 'Tebak Gambar Emoji',
         ]);
+    }
+
+    public function test_user_can_submit_game_suggestion_with_image_upload(): void
+    {
+        Storage::fake('public');
+
+        $image = UploadedFile::fake()->image('mockup.png', 300, 300);
+
+        $response = $this->post('/game-suggestions', [
+            'description' => 'Ide game seru pakai kartu',
+            'image' => $image,
+        ]);
+
+        $response->assertRedirect('/saran');
+        $response->assertSessionHas('suggestion_success');
+
+        $suggestion = GameSuggestion::latest()->first();
+        $this->assertNotNull($suggestion);
+        $this->assertEquals('Anonim', $suggestion->name);
+        $this->assertEquals('Ide Game Tanpa Judul', $suggestion->game_title);
+        $this->assertNotNull($suggestion->image_path);
+        $this->assertFileExists(public_path($suggestion->image_path));
+
+        // Cleanup created file
+        if (file_exists(public_path($suggestion->image_path))) {
+            unlink(public_path($suggestion->image_path));
+        }
     }
 
     public function test_admin_can_delete_game_suggestion(): void

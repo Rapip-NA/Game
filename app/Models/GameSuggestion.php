@@ -18,6 +18,7 @@ class GameSuggestion extends Model
         'name',
         'game_title',
         'description',
+        'image_path',
         'status',
     ];
 
