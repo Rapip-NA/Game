@@ -340,7 +340,8 @@
       'super-password': '🔑',
       'susun-urutan': '🔢',
       'siapa-kembaranku': '🎭',
-      'speaking': '🎤'
+      'speaking': '🎤',
+      'speak-up': '🗣️'
     };
 
     let gameStatuses = {};

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameSuggestionController;
 use App\Http\Controllers\SiapaKembarankuController;
 use App\Http\Controllers\SpeakingController;
+use App\Http\Controllers\SpeakUpController;
 use App\Http\Controllers\SuperPasswordController;
 use App\Http\Controllers\SusunUrutanController;
 use App\Models\GameMaintenance;
@@ -76,6 +77,11 @@ Route::prefix('games')->name('games.')->group(function (): void {
         Route::get('/speaking', [SpeakingController::class, 'index'])->name('speaking');
         Route::get('/speaking/topics', [SpeakingController::class, 'getTopics'])->name('speaking.topics');
     });
+
+    // Speak Up!
+    Route::middleware('game.maintenance:speak-up')->group(function (): void {
+        Route::get('/speak-up', [SpeakUpController::class, 'index'])->name('speak-up');
+    });
 });
 
 // Friendly aliases with game maintenance checks
@@ -90,6 +96,10 @@ Route::middleware('game.maintenance:susun-urutan')->group(function (): void {
 
 Route::middleware('game.maintenance:speaking')->group(function (): void {
     Route::get('/speaking', [SpeakingController::class, 'index']);
+});
+
+Route::middleware('game.maintenance:speak-up')->group(function (): void {
+    Route::get('/speak-up', [SpeakUpController::class, 'index']);
 });
 
 Route::middleware('game.maintenance:siapa-kembaranku')->group(function (): void {

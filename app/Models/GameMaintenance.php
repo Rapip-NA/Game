@@ -19,6 +19,7 @@ class GameMaintenance extends Model
         'susun-urutan' => 'Susun Urutan',
         'siapa-kembaranku' => 'Siapa Kembaranku?',
         'speaking' => 'Speaking Roulette',
+        'speak-up' => 'Speak Up!',
     ];
 
     /**
