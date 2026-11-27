@@ -413,7 +413,7 @@
             <!-- Filter Pills -->
             <div id="filterBar" class="flex items-center gap-2.5 overflow-x-auto py-5">
                 <button data-cat="Semua" class="filter-pill active sticker-btn bg-ink text-white font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
-                    SEMUA GAME (5)
+                    SEMUA GAME (6)
                 </button>
                 <button data-cat="Teka-Teki & Logika" class="filter-pill sticker-btn bg-white text-ink font-extrabold text-xs px-4 py-2 rounded-full shrink-0">
                     🧩 TEKA-TEKI & LOGIKA
@@ -652,6 +652,18 @@
                 url: "{{ route('games.speak-up') }}",
                 desc: "Think Fast. Speak Smart! Game show public speaking interaktif dengan 8 mode tantangan, timer proyektor, & leaderboard.",
                 art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="26" y="18" width="128" height="74" rx="16" fill="#111111" stroke="#111111" stroke-width="3"/><text x="90" y="54" text-anchor="middle" font-family="Luckiest Guy" font-size="22" fill="#FFD21E">SPEAK UP!</text><rect x="46" y="64" width="88" height="16" rx="8" fill="#EB3B24" stroke="#FFFFFF" stroke-width="2"/><text x="90" y="76" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="900" font-size="9" fill="#FFFFFF">8 MODE INTERAKTIF</text></svg>`
+            },
+            {
+                id: 'problem-detective',
+                title: "THE PROBLEM DETECTIVE",
+                category: "Teka-Teki & Logika",
+                cardBg: "bg-ink",
+                textColor: "text-white",
+                tagText: "MULTIPLAYER • 5 TIM",
+                isMaintenance: {{ ($gameStatuses['problem-detective']->is_maintenance ?? false) ? 'true' : 'false' }},
+                url: "{{ route('games.problem-detective.hub') }}",
+                desc: "Ask the right questions. Find the real problem! Game investigasi multiplayer untuk melatih Root Cause Analysis & Critical Thinking.",
+                art: `<svg viewBox="0 0 180 110" class="w-full h-full"><rect x="28" y="18" width="124" height="74" rx="14" fill="#18181B" stroke="#FFFFFF" stroke-width="2.5"/><circle cx="72" cy="52" r="18" fill="none" stroke="#22C55E" stroke-width="3.5"/><line x1="85" y1="65" x2="100" y2="80" stroke="#22C55E" stroke-width="4" stroke-linecap="round"/><text x="122" y="50" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="900" font-size="11" fill="#FAFAFA">CASE</text><text x="122" y="64" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="900" font-size="11" fill="#EF4444">#01-10</text></svg>`
             }
         ];
 

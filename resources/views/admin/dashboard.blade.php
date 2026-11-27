@@ -341,7 +341,8 @@
       'susun-urutan': '🔢',
       'siapa-kembaranku': '🎭',
       'speaking': '🎤',
-      'speak-up': '🗣️'
+      'speak-up': '🗣️',
+      'problem-detective': '🕵️'
     };
 
     let gameStatuses = {};

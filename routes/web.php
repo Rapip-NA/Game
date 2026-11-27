@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DetectiveController;
 use App\Http\Controllers\GameSuggestionController;
 use App\Http\Controllers\SiapaKembarankuController;
 use App\Http\Controllers\SpeakingController;
@@ -82,6 +83,41 @@ Route::prefix('games')->name('games.')->group(function (): void {
     Route::middleware('game.maintenance:speak-up')->group(function (): void {
         Route::get('/speak-up', [SpeakUpController::class, 'index'])->name('speak-up');
     });
+
+    // The Problem Detective
+    Route::prefix('problem-detective')->name('problem-detective.')->middleware('game.maintenance:problem-detective')->group(function (): void {
+        Route::get('/', [DetectiveController::class, 'hub'])->name('hub');
+        Route::get('/host', [DetectiveController::class, 'host'])->name('host');
+        Route::get('/play', [DetectiveController::class, 'play'])->name('play');
+        Route::get('/projector', [DetectiveController::class, 'projector'])->name('projector');
+
+        Route::post('/rooms', [DetectiveController::class, 'createRoom'])->name('rooms.create');
+        Route::get('/state', [DetectiveController::class, 'state'])->name('state');
+        Route::post('/join', [DetectiveController::class, 'join'])->name('join');
+        Route::post('/switch-team', [DetectiveController::class, 'switchTeam'])->name('switch-team');
+        Route::post('/ready', [DetectiveController::class, 'toggleReady'])->name('ready');
+
+        Route::post('/config', [DetectiveController::class, 'updateConfig'])->name('config');
+        Route::post('/phase', [DetectiveController::class, 'setPhase'])->name('phase');
+        Route::post('/timer', [DetectiveController::class, 'timerControl'])->name('timer');
+        Route::post('/defense-team', [DetectiveController::class, 'setDefenseTeam'])->name('defense-team');
+        Route::post('/lives', [DetectiveController::class, 'adjustLives'])->name('lives');
+        Route::post('/breaking-news', [DetectiveController::class, 'sendBreakingNews'])->name('breaking-news');
+        Route::post('/kick', [DetectiveController::class, 'kickPlayer'])->name('kick');
+        Route::post('/reset', [DetectiveController::class, 'resetRoom'])->name('reset');
+
+        Route::post('/questions', [DetectiveController::class, 'askQuestion'])->name('questions.ask');
+        Route::post('/questions/answer', [DetectiveController::class, 'answerQuestion'])->name('questions.answer');
+        Route::post('/board', [DetectiveController::class, 'updateEvidenceBoard'])->name('board');
+        Route::post('/report', [DetectiveController::class, 'submitFinalReport'])->name('report');
+        Route::post('/score', [DetectiveController::class, 'scoreTeam'])->name('score');
+
+        Route::get('/cases', [DetectiveController::class, 'listCases'])->name('cases.index');
+        Route::post('/cases', [DetectiveController::class, 'storeCase'])->name('cases.store');
+        Route::put('/cases/{detectiveCase}', [DetectiveController::class, 'updateCase'])->name('cases.update');
+        Route::post('/cases/{detectiveCase}/duplicate', [DetectiveController::class, 'duplicateCase'])->name('cases.duplicate');
+        Route::delete('/cases/{detectiveCase}', [DetectiveController::class, 'deleteCase'])->name('cases.delete');
+    });
 });
 
 // Friendly aliases with game maintenance checks
@@ -100,6 +136,13 @@ Route::middleware('game.maintenance:speaking')->group(function (): void {
 
 Route::middleware('game.maintenance:speak-up')->group(function (): void {
     Route::get('/speak-up', [SpeakUpController::class, 'index']);
+});
+
+Route::middleware('game.maintenance:problem-detective')->group(function (): void {
+    Route::get('/problem-detective', [DetectiveController::class, 'hub']);
+    Route::get('/problem-detective/host', [DetectiveController::class, 'host']);
+    Route::get('/problem-detective/play', [DetectiveController::class, 'play']);
+    Route::get('/problem-detective/projector', [DetectiveController::class, 'projector']);
 });
 
 Route::middleware('game.maintenance:siapa-kembaranku')->group(function (): void {
